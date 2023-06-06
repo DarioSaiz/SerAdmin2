@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,29 +8,111 @@
     tools:context=".MainActivity">
 
     <LinearLayout
+        android:id="@+id/Cabezera"
         android:layout_width="match_parent"
-        android:layout_height="659dp"
+        android:layout_height="@dimen/alto_boton"
+        android:background="@color/earlie_black"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <ImageView
+            android:id="@+id/menu"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/dots" />
+
+        <SearchView
+            android:id="@+id/buscador"
+            android:layout_width="236dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/borde_encabezado"
+            android:searchIcon="@drawable/ic_search">
+
+        </SearchView>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+
+            android:id="@+id/LogOut"
+            android:layout_width="33dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            tools:srcCompat="@tools:sample/avatars" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="623dp"
         android:orientation="horizontal">
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="664dp">
 
         </androidx.viewpager2.widget.ViewPager2>
+
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/Menus"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:background="@color/early_black"
+        android:gravity="bottom"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/selected1"
+        <ImageButton
+            android:id="@+id/home"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:backgroundTint="#00000000"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/home" />
+
+        <ImageButton
+            android:id="@+id/files"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Añadir Archivo" />
+            android:backgroundTint="#00000000"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/folder" />
+
+        <ImageButton
+            android:id="@+id/calendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#00000000"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/calendario" />
+
     </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/selected1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp"
+        android:clickable="true"
+        app:backgroundTint="#1F62FF"
+        app:ensureMinTouchTargetSize="false"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:srcCompat="@android:drawable/ic_input_add"
+        tools:ignore="SpeakableTextPresentCheck" />
 
 </LinearLayout>

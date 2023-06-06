@@ -29,6 +29,7 @@ import java.io.Serializable;
 
 public class Login extends AppCompatActivity {
     public static final String EXTRA_ID_CLIENTE = "ID_CLIENTE";
+    public static final String EXTRA_SOCIEDAD = "TIPO_SOCIEDAD";
 
     private static final int CLAVE_GESTOR = 55;
     private static final int CLAVE_CLIENTE = 56;
@@ -207,6 +208,7 @@ public class Login extends AppCompatActivity {
                         Intent intent = new Intent(getApplicationContext(), InterfazUsuario.class);
                         intent.putExtra("Cliente", clienteObjeto);
                         intent.putExtra(EXTRA_ID_CLIENTE, clienteObjeto.getDni_cliente());
+                        intent.putExtra(EXTRA_SOCIEDAD,clienteObjeto.getSociedad());
                         controladorLogin.launch(intent);
                         finish();
 

@@ -1,10 +1,12 @@
 package com.example.seradmin.Tree;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,11 +31,13 @@ public class FileTreeFragment extends Fragment {
     private TreeViewAdapter treeViewAdapter;
     private static final String TAG = "FileTreeFragment";
     private String idCliente;
+    private String idSociedad;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         idCliente = getActivity().getIntent().getStringExtra(Login.EXTRA_ID_CLIENTE);
+        idSociedad = (String) getActivity().getIntent().getSerializableExtra(Login.EXTRA_SOCIEDAD);
     }
     @Nullable
     @Override
@@ -49,7 +53,6 @@ public class FileTreeFragment extends Fragment {
         treeViewAdapter = new TreeViewAdapter(factory);
         recyclerView.setAdapter(treeViewAdapter);
 
-
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
         // Obtener el clientId de los extras del intent
@@ -60,7 +63,21 @@ public class FileTreeFragment extends Fragment {
         // Filtra los archivos por el ID del cliente
         //StorageReference clientRef = storageRef.child(idCliente);
 
-        TreeNode pdfNode = new TreeNode("Java", R.layout.list_item_file);
+        TreeNode pdfNode;
+
+        switch (idSociedad) {
+            case "autonomo":
+                pdfNode = new TreeNode("Mod 131", R.layout.list_item_file);
+                break;
+            case "Sociedad Limitada":
+                pdfNode = new TreeNode("Mod 132", R.layout.list_item_file);
+                break;
+            default:
+                pdfNode = new TreeNode("Default Node", R.layout.list_item_file);
+                break;
+        }
+
+
         // Recupera la lista de archivos PDF en el directorio "pdfs"
         storageRef.listAll().addOnSuccessListener(listResult -> {
         //clientRef.listAll().addOnSuccessListener(listResult -> {
@@ -73,9 +90,14 @@ public class FileTreeFragment extends Fragment {
                 pdfNode.addChild(new TreeNode(fileName, R.layout.list_item_file));
 
             }
+
             fileRoots.add(pdfNode);
             // Actualiza los nodos del árbol con los archivos PDF recuperados
             treeViewAdapter.updateTreeNodes(fileRoots);
+
+// Notifica al adaptador de RecyclerView que los datos han cambiado
+            treeViewAdapter.notifyDataSetChanged();
+
         }).addOnFailureListener(e -> {
             // Maneja el error de recuperación de archivos desde Firebase Storage
             Log.e(TAG, "Error retrieving PDF files from Firebase Storage", e);
@@ -126,17 +148,24 @@ public class FileTreeFragment extends Fragment {
     }
 
     private void downloadFile(String fileName) {
-        File localFile = new File(requireContext().getFilesDir(), fileName);
+        //File localFile = new File(requireContext().getFilesDir(), fileName);
 
-        FirebaseStorage mStorageRef = FirebaseStorage.getInstance();
-        StorageReference storageRef = mStorageRef.getReference().child("pdfs").child(fileName);
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference().child(idCliente).child("pdfs").child(fileName);
 
-        storageRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
-            // El archivo se ha descargado exitosamente, puedes mostrar una notificación o realizar otras acciones
-        }).addOnFailureListener(exception -> {
-            // Ha ocurrido un error al descargar el archivo, maneja el error aquí
-        });
+        File downloadsFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File localFile = new File(downloadsFolder, fileName);
+
+        storageRef.getFile(localFile)
+                .addOnSuccessListener(taskSnapshot -> {
+                    Toast.makeText(requireContext(), "Archivo descargado: " + fileName, Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(exception -> {
+                    // Ha ocurrido un error al descargar el archivo
+                    // Maneja el error aquí
+                });
     }
+
 
 
 

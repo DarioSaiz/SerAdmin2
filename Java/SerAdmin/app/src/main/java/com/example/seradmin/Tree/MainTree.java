@@ -19,10 +19,13 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.seradmin.ClienteDetalle;
 import com.example.seradmin.InterfazUsuari.InterfazUsuario;
 import com.example.seradmin.Login;
 import com.example.seradmin.R;
 import com.example.seradmin.Recycler.Cliente;
+import com.example.seradmin.calendario.Calendario;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,7 +36,7 @@ import com.google.firebase.storage.UploadTask;
 public class MainTree extends AppCompatActivity {
     private static final int NUMBER_OF_FRAGMENTS = 4;
     private static final int REQUEST_CODE = 1;
-    private Button selectButton;
+    private FloatingActionButton selectButton;
     Cliente cliente = new Cliente();
 
     @Override
