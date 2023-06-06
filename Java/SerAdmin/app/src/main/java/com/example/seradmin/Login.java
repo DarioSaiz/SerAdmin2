@@ -147,10 +147,12 @@ public class Login extends AppCompatActivity {
                                 animation.setDuration(4000);
                                 alert.startAnimation(animation);
                                 alert.setVisibility(View.VISIBLE);
+                                Log.d(TAG, "Hola estoy aqui en gestor creando la alarma");
                                 AlphaAnimation animation2 = new AlphaAnimation(1, 0);
                                 animation2.setDuration(4000);
                                 alert.startAnimation(animation2);
                                 alert.setVisibility(View.INVISIBLE);
+                                Log.d(TAG, "Hola estoy aqui en gestor apagando la alarma");
 
                             } else {
 
@@ -193,10 +195,12 @@ public class Login extends AppCompatActivity {
                         animation.setDuration(4000);
                         alert.startAnimation(animation);
                         alert.setVisibility(View.VISIBLE);
+                        Log.d(TAG, "Hola estoy aqui en cliente creando la alarma");
                         AlphaAnimation animation2 = new AlphaAnimation(1, 0);
                         animation2.setDuration(4000);
                         alert.startAnimation(animation2);
                         alert.setVisibility(View.INVISIBLE);
+                        Log.d(TAG, "Hola estoy aqui en cliente apagando la alarma");
 
                     } else {
 

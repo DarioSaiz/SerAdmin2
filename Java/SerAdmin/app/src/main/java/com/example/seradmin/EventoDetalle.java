@@ -5,18 +5,14 @@ import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.seradmin.database.eventosDatabase.Evento;
@@ -76,14 +72,14 @@ public class EventoDetalle extends AppCompatActivity {
         modificarEvento = findViewById(R.id.modificarEvento);
         eliminarEvento = findViewById(R.id.eliminarEvento);
 
-        ManejadorFechas manejadorFechaInicio = new ManejadorFechas(fechaInicioEventoDetalle);
-        ManejadorFechas manejadorFechaFin = new ManejadorFechas(fechaFinEventoDetalle);
+        ManejadorFechas manejadorFechaInicio = new ManejadorFechas(fechaInicioEventoDetalle, getSupportFragmentManager());
+        ManejadorFechas manejadorFechaFin = new ManejadorFechas(fechaFinEventoDetalle, getSupportFragmentManager());
 
         fechaInicioEventoDetalle.setOnClickListener(manejadorFechaInicio);
         fechaFinEventoDetalle.setOnClickListener(manejadorFechaFin);
 
-        ManejadorHoras manejadorHoraInicio = new ManejadorHoras(horaInicioEventoDetalle);
-        ManejadorHoras manejadorHoraFin = new ManejadorHoras(horaFinEventoDetalle);
+        ManejadorHoras manejadorHoraInicio = new ManejadorHoras(horaInicioEventoDetalle, getSupportFragmentManager());
+        ManejadorHoras manejadorHoraFin = new ManejadorHoras(horaFinEventoDetalle, getSupportFragmentManager());
 
         horaInicioEventoDetalle.setOnClickListener(manejadorHoraInicio);
         horaFinEventoDetalle.setOnClickListener(manejadorHoraFin);
@@ -248,116 +244,37 @@ public class EventoDetalle extends AppCompatActivity {
 
     }
 
-    public class ManejadorClickEdit implements View.OnClickListener {
-
-        EditText editText;
-        ImageView icono;
-        boolean editable = true;
-        String decorador;
-
-        ManejadorClickEdit(){
-
-        }
-
-        ManejadorClickEdit(EditText editText, ImageView icono, String decorador){
-            this.editText = editText;
-            this.icono = icono;
-            this.decorador = decorador;
-        }
-
-        @Override
-        public void onClick(View v) {
-            String texto = editText.getText().toString();
-            if (editable) {
-                editText.setText("");
-                editText.setEnabled(true);
-                icono.setImageResource(R.drawable.zic_check_vector);
-                editable = false;
-            } else {
-                editText.setText(decorador + texto);
-                editText.setEnabled(false);
-                icono.setImageResource(android.R.drawable.ic_menu_edit);
-                editable = true;
-            }
-        }
-    }
-
-    public class ManejadorFechas implements View.OnClickListener {
-
-        EditText fecha;
-
-        public ManejadorFechas() {
-
-        }
-
-        public ManejadorFechas(EditText fecha) {
-            this.fecha = fecha;
-        }
-
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.fechaInicioEditableEventoDetalle:
-                    showDatePickerDialog(fechaInicioEventoDetalle);
-                    break;
-
-                case R.id.fechaFinEditableEventoDetalle:
-                    showDatePickerDialog(fechaFinEventoDetalle);
-                    break;
-            }
-        }
-
-    }
-
-    public class ManejadorHoras implements View.OnClickListener {
-
-        EditText hora;
-
-        public ManejadorHoras() {
-
-        }
-
-        public ManejadorHoras(EditText hora) {
-            this.hora = hora;
-        }
-
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.horaInicioEditableEventoDetalle:
-                    showTimePickerDialog(horaInicioEventoDetalle);
-                    break;
-
-                case R.id.horaFinEditableEventoDetalle:
-                    showTimePickerDialog(horaFinEventoDetalle);
-                    break;
-            }
-        }
-    }
-
-    private void showDatePickerDialog(final EditText fecha) {
-        DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                // +1 because January is zero
-                final String selectedDate = day + "-" + (month+1) + "-" + year;
-                fecha.setText(selectedDate);
-            }
-        });
-
-        newFragment.show(getSupportFragmentManager(), "datePicker");
-    }
-
-    private void showTimePickerDialog(final EditText hora) {
-        TimePickerFragment newFragment = TimePickerFragment.newInstance(new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
-                // +1 because January is zero
-                final String selectedHour = hourOfDay + ":" + minute;
-                hora.setText(selectedHour);
-            }
-        });
-
-        newFragment.show(getSupportFragmentManager(), "timePicker");
-    }
+//    public class ManejadorClickEdit implements View.OnClickListener {
+//
+//        EditText editText;
+//        ImageView icono;
+//        boolean editable = true;
+//        String decorador;
+//
+//        ManejadorClickEdit(){
+//
+//        }
+//
+//        ManejadorClickEdit(EditText editText, ImageView icono, String decorador){
+//            this.editText = editText;
+//            this.icono = icono;
+//            this.decorador = decorador;
+//        }
+//
+//        @Override
+//        public void onClick(View v) {
+//            String texto = editText.getText().toString();
+//            if (editable) {
+//                editText.setText("");
+//                editText.setEnabled(true);
+//                icono.setImageResource(R.drawable.zic_check_vector);
+//                editable = false;
+//            } else {
+//                editText.setText(decorador + texto);
+//                editText.setEnabled(false);
+//                icono.setImageResource(android.R.drawable.ic_menu_edit);
+//                editable = true;
+//            }
+//        }
+//    }
 }

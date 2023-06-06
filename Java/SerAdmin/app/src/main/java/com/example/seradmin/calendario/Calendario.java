@@ -52,6 +52,7 @@ public class Calendario extends AppCompatActivity {
         home.setOnClickListener(view -> {
             Intent intent = new Intent(Calendario.this, InterfazUsuario.class);
             //intent.putExtra("Home", CLAVE_HOME);
+            intent.putExtra("Cliente", cliente);
             controladorCalendario.launch(intent);
             finish();
         });

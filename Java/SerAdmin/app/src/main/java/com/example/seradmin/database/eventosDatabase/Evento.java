@@ -54,6 +54,12 @@ public class Evento implements Serializable {
 
     }
 
+    public Evento(String titulo, String fechaInicio, String fechaFin){
+        this.titulo = titulo;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+    }
+
     public String getId() {
         return id;
     }

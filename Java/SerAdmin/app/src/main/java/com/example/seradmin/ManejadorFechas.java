@@ -25,10 +25,10 @@ public class ManejadorFechas implements View.OnClickListener {
         this.fragmentManager = fragmentManager;
     }
 
-    public ManejadorFechas(EditText fecha, FragmentManager fragmentManager) {
-        this.fecha = fecha;
-        this.fragmentManager = fragmentManager;
-    }
+//    public ManejadorFechas(EditText fecha, FragmentManager fragmentManager) {
+//        this.fecha = fecha;
+//        this.fragmentManager = fragmentManager;
+//    }
 
     @Override
     public void onClick(View view) {

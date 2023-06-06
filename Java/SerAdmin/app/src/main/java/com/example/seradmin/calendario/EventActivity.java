@@ -30,6 +30,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.seradmin.DatePickerFragment;
 import com.example.seradmin.EventoMain;
 import com.example.seradmin.ManejadorFechas;
+import com.example.seradmin.ManejadorHoras;
 import com.example.seradmin.NuevoEvento;
 import com.example.seradmin.R;
 import com.example.seradmin.Recycler.Cliente;
@@ -91,8 +92,8 @@ public class EventActivity extends AppCompatActivity {
         event_start_date.setOnClickListener(manejadorFechaSalida);
         event_end_date.setOnClickListener(manejadorFechaVuelta);
 
-        ManejadorHoras manejadorHoraSalida = new ManejadorHoras(event_start_time);
-        ManejadorHoras manejadorHoraVuelta = new ManejadorHoras(event_end_time);
+        ManejadorHoras manejadorHoraSalida = new ManejadorHoras(event_start_time, getSupportFragmentManager());
+        ManejadorHoras manejadorHoraVuelta = new ManejadorHoras(event_end_time, getSupportFragmentManager());
 
         event_start_time.setOnClickListener(manejadorHoraSalida);
         event_end_time.setOnClickListener(manejadorHoraVuelta);
@@ -170,51 +171,6 @@ public class EventActivity extends AppCompatActivity {
 
     }
 
-    public class ManejadorHoras implements View.OnClickListener {
-
-        EditText hora;
-
-        TextView horaT;
-
-        public ManejadorHoras() {
-
-        }
-
-        public ManejadorHoras(EditText hora) {
-            this.hora = hora;
-        }
-
-        public ManejadorHoras(TextView horaT) {
-            this.horaT = horaT;
-        }
-
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.event_start_time:
-                    showTimePickerDialog(event_start_time);
-                    break;
-
-                case R.id.event_end_time:
-                    showTimePickerDialog(event_end_time);
-                    break;
-            }
-        }
-    }
-
-    private void showTimePickerDialog(final TextView hora) {
-        TimePickerFragment newFragment = TimePickerFragment.newInstance(new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
-                // +1 because January is zero
-                final String selectedHour = hourOfDay + ":" + minute;
-                hora.setText(selectedHour);
-            }
-        });
-
-        newFragment.show(getSupportFragmentManager(), "timePicker");
-    }
-
     public Map<String, Object> prepararEvento () {
 
         String s_titulo = event_title.getText().toString(), s_descripcion = event_description.getText().toString();
@@ -282,6 +238,7 @@ public class EventActivity extends AppCompatActivity {
 
             Intent intent = new Intent(EventActivity.this, Calendario.class);
             setResult(CLAVE_INSERTADO, intent);
+            intent.putExtra("Cliente", cliente);
             EventActivity.super.onBackPressed();
             controladorEventos.launch(intent);
             finish();
