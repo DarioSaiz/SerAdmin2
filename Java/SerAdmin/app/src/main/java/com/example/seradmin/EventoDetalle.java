@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.seradmin.InterfazUsuari.InterfazUsuario;
 import com.example.seradmin.database.eventosDatabase.Evento;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -141,8 +142,8 @@ public class EventoDetalle extends AppCompatActivity {
             ref.update("Titulo", getEditTextText(tituloEventoDetalle.getText().toString()));
             ref.update("Inicio", timeStampInicio);
             ref.update("Fin", timeStampFin);
-            ref.update("Latitud", Float.valueOf(getEditTextText(latitudEventoDetalle.getText().toString())));
-            ref.update("Longitud", Float.valueOf(getEditTextText(longitudEventoDetalle.getText().toString())));
+            //ref.update("Latitud", Float.valueOf(getEditTextText(latitudEventoDetalle.getText().toString())));
+            //ref.update("Longitud", Float.valueOf(getEditTextText(longitudEventoDetalle.getText().toString())));
             ref.update("Descripcion", getEditTextText(descripcionEventoDetalle.getText().toString()));
 
             Toast.makeText(this, "Evento con Id " + evento.getId() + " modificado", Toast.LENGTH_LONG).show();
@@ -219,8 +220,9 @@ public class EventoDetalle extends AppCompatActivity {
 
     public void volverEventoMain (int clave) {
 
-        Intent intent = new Intent(EventoDetalle.this, EventoMain.class);
+        Intent intent = new Intent(EventoDetalle.this, InterfazUsuario.class);
         setResult(clave , intent);
+        //intent.putExtra("Cliente", cliente);
         EventoDetalle.super.onBackPressed();
         finish();
 
@@ -237,44 +239,11 @@ public class EventoDetalle extends AppCompatActivity {
             horaInicioEventoDetalle.setText(horaInicioEventoDetalle.getText() + " " + simpleDateFormatHora.format(timestampInicio.toDate()));
             fechaFinEventoDetalle.setText(fechaFinEventoDetalle.getText() + " " + simpleDateFormatFecha.format(timestampFin.toDate()));
             horaFinEventoDetalle.setText(horaFinEventoDetalle.getText() + " " + simpleDateFormatHora.format(timestampFin.toDate()));
-            latitudEventoDetalle.setText(latitudEventoDetalle.getText() + " " + document.get("Latitud").toString());
-            longitudEventoDetalle.setText(longitudEventoDetalle.getText() + " " + document.get("Longitud").toString());
+            //latitudEventoDetalle.setText(latitudEventoDetalle.getText() + " " + document.get("Latitud").toString());
+            //longitudEventoDetalle.setText(longitudEventoDetalle.getText() + " " + document.get("Longitud").toString());
             descripcionEventoDetalle.setText(descripcionEventoDetalle.getText() + document.get("Descripcion").toString());
         }
 
     }
 
-//    public class ManejadorClickEdit implements View.OnClickListener {
-//
-//        EditText editText;
-//        ImageView icono;
-//        boolean editable = true;
-//        String decorador;
-//
-//        ManejadorClickEdit(){
-//
-//        }
-//
-//        ManejadorClickEdit(EditText editText, ImageView icono, String decorador){
-//            this.editText = editText;
-//            this.icono = icono;
-//            this.decorador = decorador;
-//        }
-//
-//        @Override
-//        public void onClick(View v) {
-//            String texto = editText.getText().toString();
-//            if (editable) {
-//                editText.setText("");
-//                editText.setEnabled(true);
-//                icono.setImageResource(R.drawable.zic_check_vector);
-//                editable = false;
-//            } else {
-//                editText.setText(decorador + texto);
-//                editText.setEnabled(false);
-//                icono.setImageResource(android.R.drawable.ic_menu_edit);
-//                editable = true;
-//            }
-//        }
-//    }
 }

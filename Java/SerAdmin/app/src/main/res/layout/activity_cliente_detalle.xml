@@ -241,7 +241,7 @@
                 android:backgroundTint="@color/white"
                 android:enabled="false"
                 android:hint="Nueva Contraseña: "
-                android:inputType="text"
+                android:inputType="textPassword"
                 android:maxLength="180"
                 android:maxLines="1"
                 android:minEms="20"

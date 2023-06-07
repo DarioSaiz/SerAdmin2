@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.seradmin.InterfazUsuari.InterfazUsuario;
+import com.example.seradmin.InterfazUsuari.Navegador;
 import com.example.seradmin.Recycler.Cliente;
 import com.example.seradmin.Tree.FileTreeFragment;
 import com.example.seradmin.Tree.MainTree;
@@ -107,68 +108,81 @@ public class Login extends AppCompatActivity {
                 });
 
         login.setOnClickListener(v -> {
-                    //Registra evento de click en foto (no funciona)
+            //Registra evento de click en foto (no funciona)
 //            Bundle bundle = new Bundle();
 //            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, login.getContentDescription().toString());
 //            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 //            Toast.makeText(getApplicationContext(), "CLICK", Toast.LENGTH_LONG).show();
 
-                    String dni = usuario.getText().toString();
-                    String pass = contraseña.getText().toString();
+            String dni = usuario.getText().toString();
+            String pass = contraseña.getText().toString();
 
-                    db = FirebaseFirestore.getInstance();
-                    CollectionReference gestores = db.collection("Gestores");
-                    CollectionReference clientes = db.collection("Clientes");
+            if (dni.equals("") || pass.equals("")) {
 
-                    // SELECT
-                    Query gestor = gestores.whereEqualTo("DNI", dni).whereEqualTo("Contraseña", pass);
-                    Query cliente = clientes.whereEqualTo("DNI", dni).whereEqualTo("Contraseña", pass);
+                AlphaAnimation animation = new AlphaAnimation(0, 1);
+                animation.setDuration(4000);
+                alert.startAnimation(animation);
+                alert.setVisibility(View.VISIBLE);
+                Log.d(TAG, "Hola estoy aqui en gestor creando la alarma");
+                AlphaAnimation animation2 = new AlphaAnimation(1, 0);
+                animation2.setDuration(4000);
+                alert.startAnimation(animation2);
+                alert.setVisibility(View.INVISIBLE);
+                Log.d(TAG, "Hola estoy aqui en gestor apagando la alarma");
 
-                    gestor.get().addOnCompleteListener(task -> {
-                        String g_dni = "", g_pass = "", g_nombre = "", g_apellido = "", g_telefono = "";
+            }
 
-                        if (task.isSuccessful()) {
+            db = FirebaseFirestore.getInstance();
+            CollectionReference gestores = db.collection("Gestores");
+            CollectionReference clientes = db.collection("Clientes");
 
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
+            // SELECT
+            Query gestor = gestores.whereEqualTo("DNI", dni).whereEqualTo("Contraseña", pass);
+            Query cliente = clientes.whereEqualTo("DNI", dni).whereEqualTo("Contraseña", pass);
 
-                                g_dni = document.get("DNI").toString();
-                                g_pass = document.get("Contraseña").toString();
-                                g_nombre = document.get("Nombre").toString();
-                                g_apellido = document.get("Apellido").toString();
-                                g_telefono = document.get("Num_Telf").toString();
+            gestor.get().addOnCompleteListener(task -> {
+                String g_dni = "", g_pass = "", g_nombre = "", g_apellido = "", g_telefono = "";
 
-                            }
+                if (task.isSuccessful()) {
 
-                            Gestor gestorObjeto = new Gestor(g_dni, g_pass, g_nombre, g_apellido, g_telefono);
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(TAG, document.getId() + " => " + document.getData());
 
-                            if (dni.equals("") || pass.equals("")) {
+                        g_dni = document.get("DNI").toString();
+                        g_pass = document.get("Contraseña").toString();
+                        g_nombre = document.get("Nombre").toString();
+                        g_apellido = document.get("Apellido").toString();
+                        g_telefono = document.get("Num_Telf").toString();
 
-                                AlphaAnimation animation = new AlphaAnimation(0, 1);
-                                animation.setDuration(4000);
-                                alert.startAnimation(animation);
-                                alert.setVisibility(View.VISIBLE);
-                                Log.d(TAG, "Hola estoy aqui en gestor creando la alarma");
-                                AlphaAnimation animation2 = new AlphaAnimation(1, 0);
-                                animation2.setDuration(4000);
-                                alert.startAnimation(animation2);
-                                alert.setVisibility(View.INVISIBLE);
-                                Log.d(TAG, "Hola estoy aqui en gestor apagando la alarma");
+                    }
 
-                            } else {
+                    Gestor gestorObjeto = new Gestor(g_dni, g_pass, g_nombre, g_apellido, g_telefono);
 
-                                Intent intent = new Intent(getApplicationContext(), GestorMain.class);
-                                //Bundle bundle = new Bundle();
-                                //bundle.putSerializable("Gestor", (Serializable) gestorObjeto);
-                                //intent.putExtras(bundle);
-                                //intent.putExtra("DNI_Gestor", gestorObjeto);
-                                intent.putExtra("Gestor", gestorObjeto);
-                                controladorLogin.launch(intent);
-                                finish();
+                    Intent intent = new Intent(getApplicationContext(), GestorMain.class);
+                    //Bundle bundle = new Bundle();
+                    //bundle.putSerializable("Gestor", (Serializable) gestorObjeto);
+                    //intent.putExtras(bundle);
+                    //intent.putExtra("DNI_Gestor", gestorObjeto);
+                    intent.putExtra("Gestor", gestorObjeto);
+                    controladorLogin.launch(intent);
+                    finish();
 
-                            }
-                        }
-                    });
+
+                } else {
+
+                    AlphaAnimation animation = new AlphaAnimation(0, 1);
+                    animation.setDuration(4000);
+                    alert.startAnimation(animation);
+                    alert.setVisibility(View.VISIBLE);
+                    Log.d(TAG, "Hola estoy aqui en gestor creando la alarma");
+                    AlphaAnimation animation2 = new AlphaAnimation(1, 0);
+                    animation2.setDuration(4000);
+                    alert.startAnimation(animation2);
+                    alert.setVisibility(View.INVISIBLE);
+                    Log.d(TAG, "Hola estoy aqui en gestor apagando la alarma");
+
+                }
+            });
 
             cliente.get().addOnCompleteListener(task -> {
                 String c_dni = "", c_dni_gestor = "", c_pass = "", c_nombre = "", c_apellido = "", c_telefono = "", c_sociedad = "";
@@ -190,8 +204,15 @@ public class Login extends AppCompatActivity {
 
                     Cliente clienteObjeto = new Cliente(c_nombre, c_apellido, c_dni, c_dni_gestor, c_telefono, c_pass, c_sociedad);
 
-                    if (clienteObjeto.getDni_cliente().equals("")) {
 
+<<<<<<< Updated upstream
+                    Intent intent = new Intent(getApplicationContext(), InterfazUsuario.class);
+                    intent.putExtra("Cliente", clienteObjeto);
+                    intent.putExtra(EXTRA_ID_CLIENTE, clienteObjeto.getDni_cliente());
+                    intent.putExtra(EXTRA_SOCIEDAD,clienteObjeto.getSociedad());
+                    controladorLogin.launch(intent);
+                    finish();
+=======
                         AlphaAnimation animation = new AlphaAnimation(0, 1);
                         animation.setDuration(4000);
                         alert.startAnimation(animation);
@@ -205,12 +226,13 @@ public class Login extends AppCompatActivity {
 
                     } else {
 
-                        Intent intent = new Intent(getApplicationContext(), InterfazUsuario.class);
+                        Intent intent = new Intent(getApplicationContext(), Navegador.class);
                         intent.putExtra("Cliente", clienteObjeto);
                         intent.putExtra(EXTRA_ID_CLIENTE, clienteObjeto.getDni_cliente());
                         intent.putExtra(EXTRA_SOCIEDAD,clienteObjeto.getSociedad());
                         controladorLogin.launch(intent);
                         finish();
+>>>>>>> Stashed changes
 
 //                        Intent intent2 = new Intent(getApplicationContext(), MainTree.class);
 //                        intent.putExtra("Cliente", clienteObjeto);
@@ -224,10 +246,23 @@ public class Login extends AppCompatActivity {
 //                        controladorLogin.launch(intent3);
 //                        finish();
 
-                    }
+
+                } else {
+
+                    AlphaAnimation animation = new AlphaAnimation(0, 1);
+                    animation.setDuration(4000);
+                    alert.startAnimation(animation);
+                    alert.setVisibility(View.VISIBLE);
+                    Log.d(TAG, "Hola estoy aqui en cliente creando la alarma");
+                    AlphaAnimation animation2 = new AlphaAnimation(1, 0);
+                    animation2.setDuration(4000);
+                    alert.startAnimation(animation2);
+                    alert.setVisibility(View.INVISIBLE);
+                    Log.d(TAG, "Hola estoy aqui en cliente apagando la alarma");
+
                 }
             });
-                });
+        });
 
         olvidar.setOnClickListener(view -> {
             Intent intent = new Intent(Login.this, Recovery.class);

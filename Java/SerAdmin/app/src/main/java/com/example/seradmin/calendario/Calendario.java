@@ -76,7 +76,7 @@ public class Calendario extends AppCompatActivity {
         });
 
         getSupportFragmentManager().
-                beginTransaction().add(R.id.fragments_holder, new MonthFragment()).
+                beginTransaction().add(R.id.fragments_holder, new MonthFragment(cliente)).
                 commit();
 
     }

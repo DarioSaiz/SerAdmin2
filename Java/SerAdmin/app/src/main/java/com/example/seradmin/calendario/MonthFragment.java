@@ -1,7 +1,9 @@
 package com.example.seradmin.calendario;
 
+import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 import static androidx.core.widget.TextViewCompat.setTextAppearance;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +20,20 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.seradmin.EventoDetalle;
+import com.example.seradmin.EventoMain;
 import com.example.seradmin.R;
+import com.example.seradmin.Recycler.Cliente;
 import com.example.seradmin.database.eventosDatabase.Evento;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.joda.time.DateTime;
 
 import java.text.DateFormatSymbols;
@@ -42,6 +56,18 @@ public class MonthFragment extends Fragment{
     private DateTime targetDate = new DateTime();
     private Resources res;
     private String packageName;
+    private Cliente cliente;
+    private ArrayList<Evento> eventos = new ArrayList<Evento>();
+
+    private ArrayList<Event> events = new ArrayList<Event>();
+
+    public MonthFragment(){
+
+    }
+
+    public MonthFragment(Cliente cliente){
+        this.cliente = cliente;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,12 +157,13 @@ public class MonthFragment extends Fragment{
     }
 
     private void cargarEvento(DateTime targetDate, Day day) {
-        ArrayList<Event> eventos = new ArrayList<Event>();
+        eventos = new ArrayList<Evento>();
+        events = new ArrayList<Event>();
         DateTime inicio = new DateTime();
         DateTime fin = new DateTime();
         Event uno = new Event(inicio, fin, "Hoy");
-        eventos.add(uno);
-        day.setDayEvents(eventos); ;
+        events.add(uno);
+        day.setDayEvents(events);
     }
 
     public void updateCalendar(String month, List<Day> days, View view) {
@@ -193,7 +220,7 @@ public class MonthFragment extends Fragment{
     }
 
     private String getMonthName() {
-        final String[] meses =getResources().getStringArray(R.array.months);
+        final String[] meses = getResources().getStringArray(R.array.months);
         String mes = (meses[targetDate.getMonthOfYear() - 1]);
         final String targetYear = targetDate.toString(YEAR_PATTERN);
         if (!targetYear.equals(new DateTime().toString(YEAR_PATTERN))) {
@@ -204,6 +231,47 @@ public class MonthFragment extends Fragment{
 
     public DateTime getTargetDate() {
         return targetDate;
+    }
+
+    public void poblarCalendario(Day day) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Eventos").whereEqualTo("DNI_Cliente", cliente.getDni_cliente()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    eventos = new ArrayList<>();
+                    events = new ArrayList<Event>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        DocumentReference ref = document.getReference();
+                        Evento evento = new Evento();
+                        Timestamp timestampInicio = (Timestamp) document.get("Inicio");
+                        Timestamp timestampFin = (Timestamp) document.get("Fin");
+                        //evento.setId(document.getId());
+                        //evento.setTitulo(document.get("Titulo").toString());
+                        //evento.setFechaInicio(simpleDateFormat.format(timestamp.toDate()));
+                        DateTime inicio = new DateTime(timestampInicio.getSeconds());
+                        DateTime fin = new DateTime(timestampFin.getSeconds());
+                        Event uno = new Event(inicio, fin, "Hoy");
+                        events.add(uno);
+                        day.setDayEvents(events);
+                        //eventos.add(evento);
+                    }
+//                    aE = new AdaptadorEventos(eventos);
+//                    RVEventos.setAdapter(aE);
+//                    aE.setClickListener(new AdaptadorEventos.ItemClickListener() {
+//                        @Override
+//                        public void onClick(View view, int position, Evento evento) {
+//                            Intent intent = new Intent(EventoMain.this, EventoDetalle.class);
+//                            intent.putExtra("Detalle", CLAVE_LISTA);
+//                            intent.putExtra("Evento", evento);
+//                            controladorEventos.launch(intent);
+//                        }
+//                    });
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
     }
 
 

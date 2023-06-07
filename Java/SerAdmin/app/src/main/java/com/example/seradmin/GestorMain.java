@@ -159,7 +159,7 @@ public class GestorMain extends AppCompatActivity {
         CollectionReference clientes_firebase = db.collection("Clientes");
         // Obtiene los documentos en la colección de clientes y los agrega a la lista de perfiles
         //Log.d("DNI_Gestor", dni_gestor);
-        Query clientesGestor = clientes_firebase.whereEqualTo("DNI_Gestor", gestor.getDNI());
+        Query clientesGestor = clientes_firebase.whereEqualTo("DNI_Gestor", gestor.getDNI()).orderBy("Nombre");
         clientesGestor.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

@@ -115,42 +115,42 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/Menus"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/alto_cajas_texto"
-        android:layout_gravity="bottom"
-        android:background="@color/early_black"
-        android:gravity="bottom"
-        android:orientation="horizontal">
+<!--    <LinearLayout-->
+<!--        android:id="@+id/Menus"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="@dimen/alto_cajas_texto"-->
+<!--        android:layout_gravity="bottom"-->
+<!--        android:background="@color/early_black"-->
+<!--        android:gravity="bottom"-->
+<!--        android:orientation="horizontal">-->
 
-        <ImageButton
-            android:id="@+id/home"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:backgroundTint="#00000000"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/home" />
+<!--        <ImageButton-->
+<!--            android:id="@+id/home"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1"-->
+<!--            android:backgroundTint="#00000000"-->
+<!--            android:scaleType="fitCenter"-->
+<!--            app:srcCompat="@drawable/home" />-->
 
-        <ImageButton
-            android:id="@+id/files"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="#00000000"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/folder" />
+<!--        <ImageButton-->
+<!--            android:id="@+id/files"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:backgroundTint="#00000000"-->
+<!--            android:scaleType="fitCenter"-->
+<!--            app:srcCompat="@drawable/folder" />-->
 
-        <ImageButton
-            android:id="@+id/calendar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="#00000000"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/calendario" />
+<!--        <ImageButton-->
+<!--            android:id="@+id/calendar"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:backgroundTint="#00000000"-->
+<!--            android:scaleType="fitCenter"-->
+<!--            app:srcCompat="@drawable/calendario" />-->
 
-    </LinearLayout>
+<!--    </LinearLayout>-->
 
 </LinearLayout>

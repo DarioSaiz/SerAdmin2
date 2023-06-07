@@ -80,10 +80,11 @@ public class EventActivity extends AppCompatActivity {
 
 //        MaterialToolbar event_toolbar = findViewById(R.id.event_toolbar);
 //        getMenuInflater().inflate(R.menu.menu_event, (Menu) event_toolbar);
-
-        if (getIntent().getExtras().containsKey("Cliente")) {
-            cliente = (Cliente) getIntent().getSerializableExtra("Cliente");
-            Log.d("Cliente", cliente.getNombre());
+        if (getIntent().getExtras() != null) {
+            if (getIntent().getExtras().containsKey("Cliente")) {
+                cliente = (Cliente) getIntent().getSerializableExtra("Cliente");
+                Log.d("Cliente", cliente.getNombre());
+            }
         }
 
         ManejadorFechas manejadorFechaSalida = new ManejadorFechas(event_start_date, getSupportFragmentManager());

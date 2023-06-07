@@ -38,6 +38,8 @@ public class FileTreeFragment extends Fragment {
         setHasOptionsMenu(true);
         idCliente = getActivity().getIntent().getStringExtra(Login.EXTRA_ID_CLIENTE);
         idSociedad = (String) getActivity().getIntent().getSerializableExtra(Login.EXTRA_SOCIEDAD);
+        Log.e(TAG, "Error retrieving PDF files from Firebase Storage"+idSociedad);
+
     }
     @Nullable
     @Override
@@ -64,20 +66,31 @@ public class FileTreeFragment extends Fragment {
         //StorageReference clientRef = storageRef.child(idCliente);
 
         TreeNode pdfNode;
+        TreeNode pdfNode1;
 
         switch (idSociedad) {
-            case "autonomo":
+            case "Autónomo":
                 pdfNode = new TreeNode("Mod 131", R.layout.list_item_file);
                 break;
             case "Sociedad Limitada":
                 pdfNode = new TreeNode("Mod 132", R.layout.list_item_file);
+                break;
+            case "Sociedad Anónima":
+                pdfNode = new TreeNode("Mod 133", R.layout.list_item_file);
+                break;
+            case "Sociedad Civil":
+                pdfNode = new TreeNode("Mod 134", R.layout.list_item_file);
+                break;
+            case "Cooperativa":
+                pdfNode = new TreeNode("Mod 135", R.layout.list_item_file);
+                pdfNode1 = new TreeNode("Mod 135", R.layout.list_item_file);
                 break;
             default:
                 pdfNode = new TreeNode("Default Node", R.layout.list_item_file);
                 break;
         }
 
-
+        //pdfNode = new TreeNode("Mod 131", R.layout.list_item_file);
         // Recupera la lista de archivos PDF en el directorio "pdfs"
         storageRef.listAll().addOnSuccessListener(listResult -> {
         //clientRef.listAll().addOnSuccessListener(listResult -> {
