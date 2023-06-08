@@ -283,36 +283,36 @@ public class InterfazUsuario extends Fragment {
     private void poblarRecyclerView() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference eventos_firebase = db.collection("Eventos");
-<<<<<<< Updated upstream
-        Query eventosCliente = eventos_firebase.whereEqualTo("DNI_Cliente",cliente.getDni_cliente()).orderBy("Inicio", Query.Direction.ASCENDING);
-        eventosCliente.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    eventos = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        DocumentReference ref = document.getReference();
-                        Evento evento = new Evento();
-                        Timestamp timestamp = (Timestamp) document.get("Inicio");
-                        evento.setId(document.getId());
-                        evento.setTitulo(document.get("Titulo").toString());
-                        evento.setFechaInicio(simpleDateFormat.format(timestamp.toDate()));
-                        eventos.add(evento);
-                    }
-                    aE = new AdaptadorEventos(eventos);
-                    RVEventos.setAdapter(aE);
-                    aE.setClickListener(new AdaptadorEventos.ItemClickListener() {
-                        @Override
-                        public void onClick(View view, int position, Evento evento) {
-                            Intent intent = new Intent(InterfazUsuario.this, EventoDetalle.class);
-                            intent.putExtra("Detalle", CLAVE_LISTA);
-                            intent.putExtra("Evento", evento);
-                            controladorInterfaz.launch(intent);
-                        }
-                    });
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-=======
+//<<<<<<< Updated upstream
+//        Query eventosCliente = eventos_firebase.whereEqualTo("DNI_Cliente",cliente.getDni_cliente()).orderBy("Inicio", Query.Direction.ASCENDING);
+//        eventosCliente.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    eventos = new ArrayList<>();
+//                    for (QueryDocumentSnapshot document : task.getResult()) {
+//                        DocumentReference ref = document.getReference();
+//                        Evento evento = new Evento();
+//                        Timestamp timestamp = (Timestamp) document.get("Inicio");
+//                        evento.setId(document.getId());
+//                        evento.setTitulo(document.get("Titulo").toString());
+//                        evento.setFechaInicio(simpleDateFormat.format(timestamp.toDate()));
+//                        eventos.add(evento);
+//                    }
+//                    aE = new AdaptadorEventos(eventos);
+//                    RVEventos.setAdapter(aE);
+//                    aE.setClickListener(new AdaptadorEventos.ItemClickListener() {
+//                        @Override
+//                        public void onClick(View view, int position, Evento evento) {
+//                            Intent intent = new Intent(InterfazUsuario.this, EventoDetalle.class);
+//                            intent.putExtra("Detalle", CLAVE_LISTA);
+//                            intent.putExtra("Evento", evento);
+//                            controladorInterfaz.launch(intent);
+//                        }
+//                    });
+//                } else {
+//                    Log.d(TAG, "Error getting documents: ", task.getException());
+//=======
         Query eventosCliente = eventos_firebase.whereEqualTo("DNI_Cliente", cliente.getDni_cliente());
         eventosCliente.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -325,7 +325,7 @@ public class InterfazUsuario extends Fragment {
                     evento.setTitulo(document.get("Titulo").toString());
                     evento.setFechaInicio(simpleDateFormat.format(timestamp.toDate()));
                     eventos.add(evento);
->>>>>>> Stashed changes
+//>>>>>>> Stashed changes
                 }
                 aE = new AdaptadorEventos(eventos);
                 RVEventos.setAdapter(aE);

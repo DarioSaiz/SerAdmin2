@@ -149,6 +149,7 @@ public class MonthFragment extends Fragment{
             if (isToday) {  //Momentaneo hasta que BBDD
                 cargarEvento(targetDate, day);
             }
+            //poblarCalendario(days, day);
             days.add(day);
             value++;
         }
@@ -233,7 +234,7 @@ public class MonthFragment extends Fragment{
         return targetDate;
     }
 
-    public void poblarCalendario(Day day) {
+    public void poblarCalendario(List<Day> days, Day day) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("Eventos").whereEqualTo("DNI_Cliente", cliente.getDni_cliente()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -254,6 +255,7 @@ public class MonthFragment extends Fragment{
                         Event uno = new Event(inicio, fin, "Hoy");
                         events.add(uno);
                         day.setDayEvents(events);
+                        days.add(day);
                         //eventos.add(evento);
                     }
 //                    aE = new AdaptadorEventos(eventos);

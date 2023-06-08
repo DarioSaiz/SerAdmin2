@@ -10,36 +10,27 @@ import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.TimePicker;
+
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.seradmin.DatePickerFragment;
-import com.example.seradmin.EventoMain;
 import com.example.seradmin.ManejadorFechas;
 import com.example.seradmin.ManejadorHoras;
-import com.example.seradmin.NuevoEvento;
 import com.example.seradmin.R;
 import com.example.seradmin.Recycler.Cliente;
-import com.example.seradmin.TimePickerFragment;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,7 +38,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EventActivity extends AppCompatActivity {
+public class EventActivity extends AppCompatActivity implements LocationFragment.OnCallbackReceived {
 
     private static final int CLAVE_INSERTADO = 90;
     EditText event_title, event_location, event_description;
@@ -221,8 +212,12 @@ public class EventActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        MapaFragment mapaFragment = new MapaFragment();
-        fragmentTransaction.add(mapaFragment, "MapaFragment");
+        LocationFragment locationFragment = new LocationFragment();
+        //MapaFragment mapaFragment = new MapaFragment();
+        //fragmentTransaction.add(locationFragment, "LocationFragment");
+        //fragmentTransaction.replace(R.id.event_coordinator, locationFragment);
+        fragmentTransaction.add(R.id.event_holder, locationFragment);
+        //fragmentTransaction.replace(R.id.event_holder, mapaFragment);
         fragmentTransaction.commit();
     }
 
@@ -297,4 +292,8 @@ public class EventActivity extends AppCompatActivity {
 
             });
 
+    @Override
+    public void Update(MarkerOptions markerOptions) {
+        event_location.setText(markerOptions.getTitle());
+    }
 }

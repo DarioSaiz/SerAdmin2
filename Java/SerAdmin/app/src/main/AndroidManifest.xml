@@ -54,11 +54,7 @@
         <activity
             android:name=".calendario.EventActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -85,13 +81,13 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity
-            android:name=".InterfazUsuari.InterfazUsuario"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+<!--        <activity-->
+<!--            android:name=".InterfazUsuari.InterfazUsuario"-->
+<!--            android:exported="false">-->
+<!--            <meta-data-->
+<!--                android:name="android.app.lib_name"-->
+<!--                android:value="" />-->
+<!--        </activity>-->
         <activity
             android:name=".NuevoGestor"
             android:exported="false">
@@ -106,9 +102,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity
-            android:name=".Tree.NuevoArchivo"
-            android:exported="false"></activity>
+
         <activity
             android:name=".GestorMain"
             android:exported="true">
@@ -135,15 +129,14 @@
         <activity
             android:name=".Login"
             android:exported="true">
-<<<<<<< Updated upstream
-=======
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
->>>>>>> Stashed changes
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -159,13 +152,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBW3A3EPjPe1ajmUR8T5HshHq3t5SfcIVg" />
 
-        <activity
-            android:name=".Tree.MainTree"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+<!--        <activity-->
+<!--            android:name=".Tree.MainTree"-->
+<!--            android:exported="true">-->
+<!--            <meta-data-->
+<!--                android:name="android.app.lib_name"-->
+<!--                android:value="" />-->
+<!--        </activity>-->
         <activity
             android:name=".EventoMain"
             android:exported="true">

@@ -205,34 +205,34 @@ public class Login extends AppCompatActivity {
                     Cliente clienteObjeto = new Cliente(c_nombre, c_apellido, c_dni, c_dni_gestor, c_telefono, c_pass, c_sociedad);
 
 
-<<<<<<< Updated upstream
-                    Intent intent = new Intent(getApplicationContext(), InterfazUsuario.class);
-                    intent.putExtra("Cliente", clienteObjeto);
-                    intent.putExtra(EXTRA_ID_CLIENTE, clienteObjeto.getDni_cliente());
-                    intent.putExtra(EXTRA_SOCIEDAD,clienteObjeto.getSociedad());
-                    controladorLogin.launch(intent);
-                    finish();
-=======
-                        AlphaAnimation animation = new AlphaAnimation(0, 1);
-                        animation.setDuration(4000);
-                        alert.startAnimation(animation);
-                        alert.setVisibility(View.VISIBLE);
-                        Log.d(TAG, "Hola estoy aqui en cliente creando la alarma");
-                        AlphaAnimation animation2 = new AlphaAnimation(1, 0);
-                        animation2.setDuration(4000);
-                        alert.startAnimation(animation2);
-                        alert.setVisibility(View.INVISIBLE);
-                        Log.d(TAG, "Hola estoy aqui en cliente apagando la alarma");
-
-                    } else {
-
+//<<<<<<< Updated upstream
+//                    Intent intent = new Intent(getApplicationContext(), InterfazUsuario.class);
+//                    intent.putExtra("Cliente", clienteObjeto);
+//                    intent.putExtra(EXTRA_ID_CLIENTE, clienteObjeto.getDni_cliente());
+//                    intent.putExtra(EXTRA_SOCIEDAD,clienteObjeto.getSociedad());
+//                    controladorLogin.launch(intent);
+//                    finish();
+//=======
+//                        AlphaAnimation animation = new AlphaAnimation(0, 1);
+//                        animation.setDuration(4000);
+//                        alert.startAnimation(animation);
+//                        alert.setVisibility(View.VISIBLE);
+//                        Log.d(TAG, "Hola estoy aqui en cliente creando la alarma");
+//                        AlphaAnimation animation2 = new AlphaAnimation(1, 0);
+//                        animation2.setDuration(4000);
+//                        alert.startAnimation(animation2);
+//                        alert.setVisibility(View.INVISIBLE);
+//                        Log.d(TAG, "Hola estoy aqui en cliente apagando la alarma");
+//
+//                    } else {
+//
                         Intent intent = new Intent(getApplicationContext(), Navegador.class);
                         intent.putExtra("Cliente", clienteObjeto);
                         intent.putExtra(EXTRA_ID_CLIENTE, clienteObjeto.getDni_cliente());
                         intent.putExtra(EXTRA_SOCIEDAD,clienteObjeto.getSociedad());
                         controladorLogin.launch(intent);
                         finish();
->>>>>>> Stashed changes
+//>>>>>>> Stashed changes
 
 //                        Intent intent2 = new Intent(getApplicationContext(), MainTree.class);
 //                        intent.putExtra("Cliente", clienteObjeto);

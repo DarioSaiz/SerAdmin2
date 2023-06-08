@@ -42,6 +42,10 @@ public class AdaptadorListado extends RecyclerView.Adapter<AdaptadorListado.View
         perfilesArrayList2 = new ArrayList<>(perfilesArrayList);
     }
 
+    public AdaptadorListado() {
+
+    }
+
     public void filtrado(final String nombreCliente) {
         int longitud = nombreCliente.length();
         if (longitud == 0) {

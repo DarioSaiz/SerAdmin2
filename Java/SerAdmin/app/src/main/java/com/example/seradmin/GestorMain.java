@@ -39,7 +39,7 @@ public class GestorMain extends AppCompatActivity {
     private static final int CLAVE_EDITAR_GESTOR = 57;
     RecyclerView RVClientes;
     SearchView buscador;
-    AdaptadorListado aL;
+    AdaptadorListado aL = new AdaptadorListado();
     FloatingActionButton anadirCliente;
     private ArrayList<Cliente> perfiles = new ArrayList<>();
     private FirebaseFirestore db;
@@ -158,8 +158,8 @@ public class GestorMain extends AppCompatActivity {
         //Obtención de la colección "Clientes" en Firebase
         CollectionReference clientes_firebase = db.collection("Clientes");
         // Obtiene los documentos en la colección de clientes y los agrega a la lista de perfiles
-        //Log.d("DNI_Gestor", dni_gestor);
-        Query clientesGestor = clientes_firebase.whereEqualTo("DNI_Gestor", gestor.getDNI()).orderBy("Nombre");
+        Log.d("DNI_Gestor", gestor.getDNI());
+        Query clientesGestor = clientes_firebase.whereEqualTo("DNI_Gestor", gestor.getDNI()).orderBy("Nombre", Query.Direction.ASCENDING);
         clientesGestor.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
