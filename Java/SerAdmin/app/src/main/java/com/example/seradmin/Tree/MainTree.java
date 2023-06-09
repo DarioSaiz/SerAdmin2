@@ -205,6 +205,8 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -233,6 +235,8 @@ public class MainTree extends Fragment {
     private static final int NUMBER_OF_FRAGMENTS = 4;
     private static final int REQUEST_CODE = 1;
     private FloatingActionButton selectButton;
+
+    private ImageView logOutButton;
     Cliente cliente = new Cliente();
 
     @Nullable
@@ -241,6 +245,7 @@ public class MainTree extends Fragment {
         View rootView = inflater.inflate(R.layout.main_tree, container, false);
 
         selectButton = rootView.findViewById(R.id.selected1);
+        logOutButton = rootView.findViewById(R.id.logOutFinal);
 
         ViewPager2 viewPager = rootView.findViewById(R.id.view_pager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getLifecycle());
@@ -251,6 +256,14 @@ public class MainTree extends Fragment {
                 selectPDF();
             }
         });
+        logOutButton.setOnClickListener(v -> {
+            // Cerrar la aplicación y volver a la pantalla de inicio de sesión
+            Intent intent = new Intent(requireActivity(), Login.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            requireActivity().finishAffinity();
+        });
+
 
         cliente = (Cliente) requireActivity().getIntent().getSerializableExtra("Cliente");
 

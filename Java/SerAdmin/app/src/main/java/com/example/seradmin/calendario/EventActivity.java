@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -190,8 +191,9 @@ public class EventActivity extends AppCompatActivity implements LocationFragment
 
             Timestamp timeStampInicio = new Timestamp(dateInicio);
             Timestamp timeStampFin = new Timestamp(dateFin);
-            //Float s_latitud = Float.valueOf(latitud.getText().toString());
-            //Float s_longitud = Float.valueOf(longitud.getText().toString());
+            Float s_latitud = Float.valueOf(event_location.getText().toString().substring(0, event_location.getText().toString().indexOf(":")));
+            Float s_longitud = Float.valueOf(event_location.getText().toString().substring(event_location.getText().toString().indexOf(":") + 2));
+            GeoPoint geoPoint = new GeoPoint(s_latitud, s_longitud);
 
             evento.put("Titulo", s_titulo);
             evento.put("Inicio", timeStampInicio);
@@ -199,6 +201,7 @@ public class EventActivity extends AppCompatActivity implements LocationFragment
             evento.put("DNI_Cliente", cliente.getDni_cliente());
             //evento.put("Latitud", s_latitud);
             //evento.put("Longitud", s_longitud);
+            evento.put("Ubicacion", geoPoint);
             evento.put("Descripcion", s_descripcion);
             return evento;
 

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.seradmin.Login;
 import com.example.seradmin.R;
+import com.example.seradmin.Recycler.Cliente;
 import com.example.seradmin.Tree.ControladoresTree.TreeNode;
 import com.example.seradmin.Tree.ControladoresTree.TreeViewAdapter;
 import com.example.seradmin.Tree.ControladoresTree.TreeViewHolderFactory;
@@ -32,12 +33,14 @@ public class FileTreeFragment extends Fragment {
     private static final String TAG = "FileTreeFragment";
     private String idCliente;
     private String idSociedad;
+    Cliente cliente = new Cliente();
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        idCliente = getActivity().getIntent().getStringExtra(Login.EXTRA_ID_CLIENTE);
-        idSociedad = (String) getActivity().getIntent().getSerializableExtra(Login.EXTRA_SOCIEDAD);
+//        idCliente = getActivity().getIntent().getStringExtra(Login.EXTRA_ID_CLIENTE);
+//        idSociedad = (String) getActivity().getIntent().getSerializableExtra(Login.EXTRA_SOCIEDAD);
+        cliente = (Cliente) getActivity().getIntent().getSerializableExtra("Cliente");
         Log.e(TAG, "Error retrieving PDF files from Firebase Storage"+idSociedad);
 
     }
@@ -61,14 +64,14 @@ public class FileTreeFragment extends Fragment {
         //String idCliente = getIntent().getStringExtra(Login.EXTRA_ID_CLIENTE);
 
         // Crea una referencia al directorio "pdfs" en Firebase Storage
-        StorageReference storageRef = storage.getReference().child(idCliente).child("pdfs");
+        StorageReference storageRef = storage.getReference().child(cliente.getDni_cliente()).child("pdfs");
         // Filtra los archivos por el ID del cliente
         //StorageReference clientRef = storageRef.child(idCliente);
 
         TreeNode pdfNode;
         TreeNode pdfNode1;
 
-        switch (idSociedad) {
+        switch (cliente.getSociedad()) {
             case "Autónomo":
                 pdfNode = new TreeNode("Mod 131", R.layout.list_item_file);
                 break;
@@ -144,6 +147,13 @@ public class FileTreeFragment extends Fragment {
             }
         });
 
+        treeViewAdapter.setTreeNodeClickListener((treeNode, nodeView) -> {
+            if (treeNode.getValue() instanceof String) {
+                String fileName = (String) treeNode.getValue();
+                deleteFile(fileName);
+            }
+        });
+
 
 //        treeViewAdapter.setTreeNodeClickListener((treeNode, nodeView) -> {
 //            Log.d(TAG, "Click on TreeNode with value " + treeNode.getValue().toString());
@@ -164,7 +174,7 @@ public class FileTreeFragment extends Fragment {
         //File localFile = new File(requireContext().getFilesDir(), fileName);
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference().child(idCliente).child("pdfs").child(fileName);
+        StorageReference storageRef = storage.getReference().child(cliente.getDni_cliente()).child("pdfs").child(fileName);
 
         File downloadsFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File localFile = new File(downloadsFolder, fileName);
@@ -175,6 +185,22 @@ public class FileTreeFragment extends Fragment {
                 })
                 .addOnFailureListener(exception -> {
                     // Ha ocurrido un error al descargar el archivo
+                    // Maneja el error aquí
+                });
+    }
+    private void deleteFile(String fileName) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference fileRef = storage.getReference().child(idCliente).child("pdfs").child(fileName);
+
+        fileRef.delete()
+                .addOnSuccessListener(aVoid -> {
+                    // El archivo se ha eliminado correctamente
+                    Toast.makeText(requireContext(), "Archivo eliminado: " + fileName, Toast.LENGTH_SHORT).show();
+                    // Actualiza la vista eliminando el nodo correspondiente
+                   // treeViewAdapter.removeNodeByValue(fileName);
+                })
+                .addOnFailureListener(exception -> {
+                    // Ha ocurrido un error al eliminar el archivo
                     // Maneja el error aquí
                 });
     }

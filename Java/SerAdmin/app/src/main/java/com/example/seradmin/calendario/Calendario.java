@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.seradmin.InterfazUsuari.InterfazUsuario;
@@ -29,7 +30,7 @@ public class Calendario extends AppCompatActivity {
 
     FloatingActionButton add;
     Cliente cliente = new Cliente();
-    ImageButton home,files,calendar;
+    ImageView home,files,calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +39,9 @@ public class Calendario extends AppCompatActivity {
         add = findViewById(R.id.add);
         add.setVisibility(View.VISIBLE);
 
-        home = findViewById(R.id.home);
-        files = findViewById(R.id.files);
-        calendar = findViewById(R.id.calendar);
+//        home = findViewById(R.id.home);
+//        files = findViewById(R.id.files);
+//        calendar = findViewById(R.id.calendar);
 
         if (getIntent().getExtras() != null) {
             if (getIntent().getExtras().containsKey("Cliente")) {

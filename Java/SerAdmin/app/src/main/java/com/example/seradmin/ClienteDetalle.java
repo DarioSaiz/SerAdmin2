@@ -221,7 +221,7 @@ public class ClienteDetalle extends AppCompatActivity {
             apellidoCliente.setText(apellidoCliente.getText() + document.get("Apellido").toString());
             dniCliente.setText(dniCliente.getText() + document.get("DNI").toString());
             //dniGestor.setText(dniGestor.getText() + document.get("DNI_Gestor").toString());
-            telefonoCliente.setText(telefonoCliente.getText() + document.get("Telefono").toString());
+            telefonoCliente.setText(telefonoCliente.getText() + document.get("Num_Telf").toString());
             passCliente.setText(passCliente.getText() + document.get("Contraseña").toString());
         }
 

@@ -2,8 +2,6 @@ package com.example.seradmin.InterfazUsuari;
 
 import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
-import static com.example.seradmin.Login.EXTRA_ID_CLIENTE;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,34 +9,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.seradmin.ClienteDetalle;
 import com.example.seradmin.EventoDetalle;
-import com.example.seradmin.EventoMain;
 import com.example.seradmin.Gestor;
-import com.example.seradmin.NuevoEvento;
+import com.example.seradmin.Login;
 import com.example.seradmin.R;
 import com.example.seradmin.Recycler.Cliente;
-import com.example.seradmin.Tree.*;
 import com.example.seradmin.calendario.AdaptadorEventos;
-import com.example.seradmin.calendario.Calendario;
 import com.example.seradmin.database.eventosDatabase.Evento;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -219,6 +211,7 @@ public class InterfazUsuario extends Fragment {
     AdaptadorEventos aE = new AdaptadorEventos(new ArrayList<>());
     String pattern = "dd-MM-yy HH:mm";
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+    private ImageView logOutButton;
 
     @Nullable
     @Override
@@ -228,7 +221,9 @@ public class InterfazUsuario extends Fragment {
 //        home = view.findViewById(R.id.home);
 //        files = view.findViewById(R.id.files);
 //        calendar = view.findViewById(R.id.calendar);
-        imagen = view.findViewById(R.id.LogOut);
+        imagen = view.findViewById(R.id.perfilImagenGestor);
+        logOutButton = view.findViewById(R.id.logOutFinal);
+
 
 
         RVEventos = view.findViewById(R.id.recyclerEventos);
@@ -239,14 +234,14 @@ public class InterfazUsuario extends Fragment {
         RVArchivos.setHasFixedSize(true);
         RVArchivos.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        if (getArguments() != null) {
-            if (getArguments().containsKey("Cliente")) {
-                cliente = (Cliente) getArguments().getSerializable("Cliente");
+        if (getActivity().getIntent().getExtras() != null) {
+            if (getActivity().getIntent().getExtras().containsKey("Cliente")) {
+                cliente = (Cliente) getActivity().getIntent().getExtras().getSerializable("Cliente");
                 Log.d("Cliente", cliente.getNombre());
             }
 
-            if (getArguments().containsKey("Gestor")) {
-                gestor = (Gestor) getArguments().getSerializable("Gestor");
+            if (getActivity().getIntent().getExtras().containsKey("Gestor")) {
+                gestor = (Gestor) getActivity().getIntent().getExtras().getSerializable("Gestor");
                 Log.d("Gestor", gestor.getNombre());
             }
         }
@@ -276,6 +271,12 @@ public class InterfazUsuario extends Fragment {
             intent.putExtra("Cliente", cliente);
             controladorInterfaz.launch(intent);
         });
+        logOutButton.setOnClickListener(v -> {
+            Intent intent = new Intent(requireActivity(), Login.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            requireActivity().finishAffinity();
+        });
 
         return view;
     }
@@ -283,62 +284,64 @@ public class InterfazUsuario extends Fragment {
     private void poblarRecyclerView() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference eventos_firebase = db.collection("Eventos");
-//<<<<<<< Updated upstream
-//        Query eventosCliente = eventos_firebase.whereEqualTo("DNI_Cliente",cliente.getDni_cliente()).orderBy("Inicio", Query.Direction.ASCENDING);
-//        eventosCliente.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    eventos = new ArrayList<>();
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        DocumentReference ref = document.getReference();
-//                        Evento evento = new Evento();
-//                        Timestamp timestamp = (Timestamp) document.get("Inicio");
-//                        evento.setId(document.getId());
-//                        evento.setTitulo(document.get("Titulo").toString());
-//                        evento.setFechaInicio(simpleDateFormat.format(timestamp.toDate()));
-//                        eventos.add(evento);
-//                    }
-//                    aE = new AdaptadorEventos(eventos);
-//                    RVEventos.setAdapter(aE);
-//                    aE.setClickListener(new AdaptadorEventos.ItemClickListener() {
-//                        @Override
-//                        public void onClick(View view, int position, Evento evento) {
-//                            Intent intent = new Intent(InterfazUsuario.this, EventoDetalle.class);
-//                            intent.putExtra("Detalle", CLAVE_LISTA);
-//                            intent.putExtra("Evento", evento);
-//                            controladorInterfaz.launch(intent);
-//                        }
-//                    });
-//                } else {
-//                    Log.d(TAG, "Error getting documents: ", task.getException());
-//=======
-        Query eventosCliente = eventos_firebase.whereEqualTo("DNI_Cliente", cliente.getDni_cliente());
-        eventosCliente.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                eventos = new ArrayList<>();
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    DocumentReference ref = document.getReference();
-                    Evento evento = new Evento();
-                    Timestamp timestamp = (Timestamp) document.get("Inicio");
-                    evento.setId(document.getId());
-                    evento.setTitulo(document.get("Titulo").toString());
-                    evento.setFechaInicio(simpleDateFormat.format(timestamp.toDate()));
-                    eventos.add(evento);
-//>>>>>>> Stashed changes
+        Query eventosCliente = eventos_firebase.whereEqualTo("DNI_Cliente",cliente.getDni_cliente()).orderBy("Inicio", Query.Direction.ASCENDING);
+        eventosCliente.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    eventos = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        DocumentReference ref = document.getReference();
+                        Evento evento = new Evento();
+                        Timestamp timestamp = (Timestamp) document.get("Inicio");
+                        evento.setId(document.getId());
+                        evento.setTitulo(document.get("Titulo").toString());
+                        evento.setFechaInicio(simpleDateFormat.format(timestamp.toDate()));
+                        eventos.add(evento);
+                    }
+                    aE = new AdaptadorEventos(eventos);
+                    RVEventos.setAdapter(aE);
+                    aE.setClickListener(new AdaptadorEventos.ItemClickListener() {
+                        @Override
+                        public void onClick(View view, int position, Evento evento) {
+                            Intent intent = new Intent(getActivity(), EventoDetalle.class);
+                            intent.putExtra("Detalle", CLAVE_LISTA);
+                            intent.putExtra("Evento", evento);
+                            controladorInterfaz.launch(intent);
+                        }
+                    });
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
                 }
-                aE = new AdaptadorEventos(eventos);
-                RVEventos.setAdapter(aE);
-                aE.setClickListener((view, position, evento) -> {
-                    Intent intent = new Intent(requireActivity(), EventoDetalle.class);
-                    intent.putExtra("Detalle", CLAVE_LISTA);
-                    intent.putExtra("Evento", evento);
-                    controladorInterfaz.launch(intent);
-                });
-            } else {
-                Log.d(TAG, "Error getting documents: ", task.getException());
             }
         });
+
+//        Query eventosCliente = eventos_firebase.whereEqualTo("DNI_Cliente", cliente.getDni_cliente());
+//        eventosCliente.get().addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                eventos = new ArrayList<>();
+//                for (QueryDocumentSnapshot document : task.getResult()) {
+//                    DocumentReference ref = document.getReference();
+//                    Evento evento = new Evento();
+//                    Timestamp timestamp = (Timestamp) document.get("Inicio");
+//                    evento.setId(document.getId());
+//                    evento.setTitulo(document.get("Titulo").toString());
+//                    evento.setFechaInicio(simpleDateFormat.format(timestamp.toDate()));
+//                    eventos.add(evento);
+////>>>>>>> Stashed changes
+//                }
+//                aE = new AdaptadorEventos(eventos);
+//                RVEventos.setAdapter(aE);
+//                aE.setClickListener((view, position, evento) -> {
+//                    Intent intent = new Intent(requireActivity(), EventoDetalle.class);
+//                    intent.putExtra("Detalle", CLAVE_LISTA);
+//                    intent.putExtra("Evento", evento);
+//                    controladorInterfaz.launch(intent);
+//                });
+//            } else {
+//                Log.d(TAG, "Error getting documents: ", task.getException());
+//            }
+//        });
     }
 
     ActivityResultLauncher<Intent> controladorInterfaz = registerForActivityResult(
@@ -347,4 +350,9 @@ public class InterfazUsuario extends Fragment {
                 // Handle the result
             });
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        poblarRecyclerView();
+    }
 }

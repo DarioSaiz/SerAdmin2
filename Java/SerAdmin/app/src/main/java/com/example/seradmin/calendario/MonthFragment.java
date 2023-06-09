@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 
 import com.example.seradmin.EventoDetalle;
 import com.example.seradmin.EventoMain;
+import com.example.seradmin.Login;
 import com.example.seradmin.R;
 import com.example.seradmin.Recycler.Cliente;
 import com.example.seradmin.database.eventosDatabase.Evento;
@@ -58,8 +60,9 @@ public class MonthFragment extends Fragment{
     private String packageName;
     private Cliente cliente;
     private ArrayList<Evento> eventos = new ArrayList<Evento>();
-
     private ArrayList<Event> events = new ArrayList<Event>();
+    private List<Day> days = new ArrayList<>();
+    private ImageButton logOutButton;
 
     public MonthFragment(){
 
@@ -82,6 +85,13 @@ public class MonthFragment extends Fragment{
         right = view.findViewById(R.id.right);
         left = view.findViewById(R.id.left);
 
+        logOutButton = view.findViewById(R.id.logOutFinal);
+
+        if (getActivity().getIntent().getExtras().containsKey("Cliente")) {
+            cliente = (Cliente) getActivity().getIntent().getSerializableExtra("Cliente");
+        }
+
+
         right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,6 +113,14 @@ public class MonthFragment extends Fragment{
         }
         updateCalendar(targetDate, view);
 
+        logOutButton.setOnClickListener(v -> {
+            // Cerrar la aplicación y volver a la pantalla de inicio de sesión
+            Intent intent = new Intent(requireActivity(), Login.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            requireActivity().finishAffinity();
+        });
+
         return view;
     }
 
@@ -121,7 +139,8 @@ public class MonthFragment extends Fragment{
     }
 
     private void getDays(DateTime targetDate, View view) {
-        final List<Day> days = new ArrayList<>(DAYS_CNT);
+        //final List<Day> days = new ArrayList<>(DAYS_CNT);
+        days = new ArrayList<>(DAYS_CNT);
 
         final int currMonthDays = targetDate.dayOfMonth().getMaximumValue();
         final int firstDayIndex = targetDate.withDayOfMonth(1).getDayOfWeek() - 1;
@@ -144,11 +163,12 @@ public class MonthFragment extends Fragment{
 
             isToday = isThisMonth && isToday(targetDate, value);
 
-            ArrayList<Event> events = new ArrayList<Event>();
+            ArrayList<Event> events = poblarArray();
             final Day day = new Day(value, isThisMonth, isToday, events);
-            if (isToday) {  //Momentaneo hasta que BBDD
-                cargarEvento(targetDate, day);
-            }
+//            if (isToday) {  //Momentaneo hasta que BBDD
+//                //cargarEvento(targetDate, day);
+//                cargarEventos(day);
+//            }
             //poblarCalendario(days, day);
             days.add(day);
             value++;
@@ -165,6 +185,90 @@ public class MonthFragment extends Fragment{
         Event uno = new Event(inicio, fin, "Hoy");
         events.add(uno);
         day.setDayEvents(events);
+    }
+
+    private void cargarEventos(Day day) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Eventos").whereEqualTo("DNI_Cliente", cliente.getDni_cliente()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    eventos = new ArrayList<>();
+                    events = new ArrayList<Event>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        DocumentReference ref = document.getReference();
+                        Evento evento = new Evento();
+                        Timestamp timestampInicio = (Timestamp) document.get("Inicio");
+                        Timestamp timestampFin = (Timestamp) document.get("Fin");
+                        //evento.setId(document.getId());
+                        //evento.setTitulo(document.get("Titulo").toString());
+                        //evento.setFechaInicio(simpleDateFormat.format(timestamp.toDate()));
+                        DateTime inicio = new DateTime(timestampInicio.getSeconds());
+                        DateTime fin = new DateTime(timestampFin.getSeconds());
+                        Event uno = new Event(inicio, fin, "Hoy");
+                        events.add(uno);
+                        day.setDayEvents(events);
+                        days.add(day);
+                        //eventos.add(evento);
+                    }
+//                    aE = new AdaptadorEventos(eventos);
+//                    RVEventos.setAdapter(aE);
+//                    aE.setClickListener(new AdaptadorEventos.ItemClickListener() {
+//                        @Override
+//                        public void onClick(View view, int position, Evento evento) {
+//                            Intent intent = new Intent(EventoMain.this, EventoDetalle.class);
+//                            intent.putExtra("Detalle", CLAVE_LISTA);
+//                            intent.putExtra("Evento", evento);
+//                            controladorEventos.launch(intent);
+//                        }
+//                    });
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+    }
+
+    private ArrayList<Event> poblarArray() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Eventos").whereEqualTo("DNI_Cliente", cliente.getDni_cliente()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    eventos = new ArrayList<>();
+                    events = new ArrayList<Event>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        DocumentReference ref = document.getReference();
+                        Evento evento = new Evento();
+                        Timestamp timestampInicio = (Timestamp) document.get("Inicio");
+                        Timestamp timestampFin = (Timestamp) document.get("Fin");
+                        //evento.setId(document.getId());
+                        //evento.setTitulo(document.get("Titulo").toString());
+                        //evento.setFechaInicio(simpleDateFormat.format(timestamp.toDate()));
+                        DateTime inicio = new DateTime(timestampInicio.getSeconds());
+                        DateTime fin = new DateTime(timestampFin.getSeconds());
+                        Event uno = new Event(inicio, fin, document.get("Titulo").toString());
+                        events.add(uno);
+                        //eventos.add(evento);
+                    }
+
+//                    aE = new AdaptadorEventos(eventos);
+//                    RVEventos.setAdapter(aE);
+//                    aE.setClickListener(new AdaptadorEventos.ItemClickListener() {
+//                        @Override
+//                        public void onClick(View view, int position, Evento evento) {
+//                            Intent intent = new Intent(EventoMain.this, EventoDetalle.class);
+//                            intent.putExtra("Detalle", CLAVE_LISTA);
+//                            intent.putExtra("Evento", evento);
+//                            controladorEventos.launch(intent);
+//                        }
+//                    });
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+        return events;
     }
 
     public void updateCalendar(String month, List<Day> days, View view) {

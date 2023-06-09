@@ -1,6 +1,7 @@
 package com.example.seradmin.Tree;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ public class FileViewHolder extends TreeViewHolder {
     private TextView fileName;
     private ImageView fileStateIcon;
     private ImageView fileTypeIcon;
+    private Button deleteButton;
 
     public FileViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -25,6 +27,7 @@ public class FileViewHolder extends TreeViewHolder {
         fileName = itemView.findViewById(R.id.file_name);
         fileStateIcon = itemView.findViewById(R.id.file_state_icon);
         fileTypeIcon = itemView.findViewById(R.id.file_type_icon);
+        deleteButton = itemView.findViewById(R.id.delete_button);
     }
 
     @Override
@@ -50,5 +53,7 @@ public class FileViewHolder extends TreeViewHolder {
             int stateIcon = node.isExpanded() ? R.drawable.down_arrow : R.drawable.next;
             fileStateIcon.setImageResource(stateIcon);
         }
+
+
     }
 }

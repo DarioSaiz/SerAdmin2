@@ -92,7 +92,7 @@
             android:layout_marginTop="-20dp"
             android:backgroundTint="@color/white"
             android:hint="@string/contraseña"
-            android:inputType="text"
+            android:inputType="textPassword"
             android:maxLength="180"
             android:maxLines="1"
             android:minEms="20"

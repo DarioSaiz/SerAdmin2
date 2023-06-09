@@ -21,6 +21,9 @@ import com.example.seradmin.InterfazUsuari.Navegador;
 import com.example.seradmin.Recycler.Cliente;
 import com.example.seradmin.Tree.FileTreeFragment;
 import com.example.seradmin.Tree.MainTree;
+import com.google.firebase.firestore.AggregateQuery;
+import com.google.firebase.firestore.AggregateQuerySnapshot;
+import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -121,14 +124,15 @@ public class Login extends AppCompatActivity {
 
                 AlphaAnimation animation = new AlphaAnimation(0, 1);
                 animation.setDuration(4000);
+                alert.setText("DNI o Contraseña vacíos");
                 alert.startAnimation(animation);
                 alert.setVisibility(View.VISIBLE);
-                Log.d(TAG, "Hola estoy aqui en gestor creando la alarma");
+                Log.d(TAG, "Hola estoy creando la alarma de campos vacios");
                 AlphaAnimation animation2 = new AlphaAnimation(1, 0);
                 animation2.setDuration(4000);
                 alert.startAnimation(animation2);
                 alert.setVisibility(View.INVISIBLE);
-                Log.d(TAG, "Hola estoy aqui en gestor apagando la alarma");
+                Log.d(TAG, "Hola estoy apagando la alarma de campos vacios");
 
             }
 
@@ -139,129 +143,133 @@ public class Login extends AppCompatActivity {
             // SELECT
             Query gestor = gestores.whereEqualTo("DNI", dni).whereEqualTo("Contraseña", pass);
             Query cliente = clientes.whereEqualTo("DNI", dni).whereEqualTo("Contraseña", pass);
+            AggregateQuery countGestor = gestor.count();
+            AggregateQuery countCliente = cliente.count();
 
-            gestor.get().addOnCompleteListener(task -> {
-                String g_dni = "", g_pass = "", g_nombre = "", g_apellido = "", g_telefono = "";
+            countGestor.get(AggregateSource.SERVER).addOnCompleteListener(taskCountGestor -> {
+                if (taskCountGestor.isSuccessful()) {
+                    // Count fetched successfully
+                    AggregateQuerySnapshot snapshot = taskCountGestor.getResult();
+                    Log.d(TAG, "Count: " + snapshot.getCount());
+                    if (snapshot.getCount() != 0) {
+                        gestor.get().addOnCompleteListener(task -> {
+                            String g_dni = "", g_pass = "", g_nombre = "", g_apellido = "", g_telefono = "";
 
-                if (task.isSuccessful()) {
+                            if (task.isSuccessful()) {
 
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId() + " => " + document.getData());
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
 
-                        g_dni = document.get("DNI").toString();
-                        g_pass = document.get("Contraseña").toString();
-                        g_nombre = document.get("Nombre").toString();
-                        g_apellido = document.get("Apellido").toString();
-                        g_telefono = document.get("Num_Telf").toString();
+                                    g_dni = document.get("DNI").toString();
+                                    g_pass = document.get("Contraseña").toString();
+                                    g_nombre = document.get("Nombre").toString();
+                                    g_apellido = document.get("Apellido").toString();
+                                    g_telefono = document.get("Num_Telf").toString();
 
+                                }
+
+                                Gestor gestorObjeto = new Gestor(g_dni, g_pass, g_nombre, g_apellido, g_telefono);
+
+                                Intent intent = new Intent(Login.this, GestorMain.class);
+                                //Bundle bundle = new Bundle();
+                                //bundle.putSerializable("Gestor", (Serializable) gestorObjeto);
+                                //intent.putExtras(bundle);
+                                //intent.putExtra("DNI_Gestor", gestorObjeto);
+                                intent.putExtra("Gestor", gestorObjeto);
+                                controladorLogin.launch(intent);
+                                finish();
+
+                            } else {
+                                Log.d(TAG, "Count failed: ", task.getException());
+                            }
+                        });
+                    } else {
+
+                        AlphaAnimation animation = new AlphaAnimation(0, 1);
+                        animation.setDuration(4000);
+                        alert.startAnimation(animation);
+                        alert.setVisibility(View.VISIBLE);
+                        Log.d(TAG, "Hola estoy aqui en gestor creando la alarma");
+                        AlphaAnimation animation2 = new AlphaAnimation(1, 0);
+                        animation2.setDuration(4000);
+                        alert.startAnimation(animation2);
+                        alert.setVisibility(View.INVISIBLE);
+                        Log.d(TAG, "Hola estoy aqui en gestor apagando la alarma");
                     }
-
-                    Gestor gestorObjeto = new Gestor(g_dni, g_pass, g_nombre, g_apellido, g_telefono);
-
-                    Intent intent = new Intent(getApplicationContext(), GestorMain.class);
-                    //Bundle bundle = new Bundle();
-                    //bundle.putSerializable("Gestor", (Serializable) gestorObjeto);
-                    //intent.putExtras(bundle);
-                    //intent.putExtra("DNI_Gestor", gestorObjeto);
-                    intent.putExtra("Gestor", gestorObjeto);
-                    controladorLogin.launch(intent);
-                    finish();
-
-
                 } else {
-
-                    AlphaAnimation animation = new AlphaAnimation(0, 1);
-                    animation.setDuration(4000);
-                    alert.startAnimation(animation);
-                    alert.setVisibility(View.VISIBLE);
-                    Log.d(TAG, "Hola estoy aqui en gestor creando la alarma");
-                    AlphaAnimation animation2 = new AlphaAnimation(1, 0);
-                    animation2.setDuration(4000);
-                    alert.startAnimation(animation2);
-                    alert.setVisibility(View.INVISIBLE);
-                    Log.d(TAG, "Hola estoy aqui en gestor apagando la alarma");
-
+                    Log.d(TAG, "Count failed: ", taskCountGestor.getException());
                 }
             });
 
-            cliente.get().addOnCompleteListener(task -> {
-                String c_dni = "", c_dni_gestor = "", c_pass = "", c_nombre = "", c_apellido = "", c_telefono = "", c_sociedad = "";
+            countCliente.get(AggregateSource.SERVER).addOnCompleteListener(taskCountCliente -> {
+                if (taskCountCliente.isSuccessful()) {
+                    // Count fetched successfully
+                    AggregateQuerySnapshot snapshot = taskCountCliente.getResult();
+                    Log.d(TAG, "Count: " + snapshot.getCount());
+                    if (snapshot.getCount() != 0) {
+                        cliente.get().addOnCompleteListener(task -> {
+                            String c_dni = "", c_dni_gestor = "", c_pass = "", c_nombre = "", c_apellido = "", c_telefono = "", c_sociedad = "";
 
-                if (task.isSuccessful()) {
+                            if (task.isSuccessful()) {
 
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId() + " => " + document.getData());
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
 
-                        c_dni = document.get("DNI").toString();
-                        c_pass = document.get("Contraseña").toString();
-                        c_nombre = document.get("Nombre").toString();
-                        c_apellido = document.get("Apellido").toString();
-                        c_telefono = document.get("Num_Telf").toString();
-                        c_dni_gestor = document.get("DNI_Gestor").toString();
-                        c_sociedad = document.get("Sociedad").toString();
+                                    c_dni = document.get("DNI").toString();
+                                    c_pass = document.get("Contraseña").toString();
+                                    c_nombre = document.get("Nombre").toString();
+                                    c_apellido = document.get("Apellido").toString();
+                                    c_telefono = document.get("Num_Telf").toString();
+                                    c_dni_gestor = document.get("DNI_Gestor").toString();
+                                    c_sociedad = document.get("Sociedad").toString();
 
+                                }
+
+                                Cliente clienteObjeto = new Cliente(c_nombre, c_apellido, c_dni, c_dni_gestor, c_telefono, c_pass, c_sociedad);
+
+                                Intent intent = new Intent(getApplicationContext(), Navegador.class);
+                                intent.putExtra("Cliente", clienteObjeto);
+                                intent.putExtra(EXTRA_ID_CLIENTE, clienteObjeto.getDni_cliente());
+                                intent.putExtra(EXTRA_SOCIEDAD, clienteObjeto.getSociedad());
+                                controladorLogin.launch(intent);
+                                finish();
+
+                                if (dni.equals("") || pass.equals("")) {
+
+                                    AlphaAnimation animation = new AlphaAnimation(0, 1);
+                                    animation.setDuration(4000);
+                                    alert.setText("DNI o Contraseña vacíos");
+                                    alert.startAnimation(animation);
+                                    alert.setVisibility(View.VISIBLE);
+                                    Log.d(TAG, "Hola estoy aqui en cliente creando la alarma");
+                                    AlphaAnimation animation2 = new AlphaAnimation(1, 0);
+                                    animation2.setDuration(4000);
+                                    alert.startAnimation(animation2);
+                                    alert.setVisibility(View.INVISIBLE);
+                                    Log.d(TAG, "Hola estoy aqui en cliente apagando la alarma");
+
+                                }
+                            } else {
+                                Log.d(TAG, "Count failed: ", task.getException());
+                            }
+                        });
+                    } else {
+                        AlphaAnimation animation = new AlphaAnimation(0, 1);
+                        animation.setDuration(4000);
+                        alert.startAnimation(animation);
+                        alert.setVisibility(View.VISIBLE);
+                        Log.d(TAG, "Hola estoy aqui en cliente creando la alarma");
+                        AlphaAnimation animation2 = new AlphaAnimation(1, 0);
+                        animation2.setDuration(4000);
+                        alert.startAnimation(animation2);
+                        alert.setVisibility(View.INVISIBLE);
+                        Log.d(TAG, "Hola estoy aqui en cliente apagando la alarma");
                     }
-
-                    Cliente clienteObjeto = new Cliente(c_nombre, c_apellido, c_dni, c_dni_gestor, c_telefono, c_pass, c_sociedad);
-
-
-//<<<<<<< Updated upstream
-//                    Intent intent = new Intent(getApplicationContext(), InterfazUsuario.class);
-//                    intent.putExtra("Cliente", clienteObjeto);
-//                    intent.putExtra(EXTRA_ID_CLIENTE, clienteObjeto.getDni_cliente());
-//                    intent.putExtra(EXTRA_SOCIEDAD,clienteObjeto.getSociedad());
-//                    controladorLogin.launch(intent);
-//                    finish();
-//=======
-//                        AlphaAnimation animation = new AlphaAnimation(0, 1);
-//                        animation.setDuration(4000);
-//                        alert.startAnimation(animation);
-//                        alert.setVisibility(View.VISIBLE);
-//                        Log.d(TAG, "Hola estoy aqui en cliente creando la alarma");
-//                        AlphaAnimation animation2 = new AlphaAnimation(1, 0);
-//                        animation2.setDuration(4000);
-//                        alert.startAnimation(animation2);
-//                        alert.setVisibility(View.INVISIBLE);
-//                        Log.d(TAG, "Hola estoy aqui en cliente apagando la alarma");
-//
-//                    } else {
-//
-                        Intent intent = new Intent(getApplicationContext(), Navegador.class);
-                        intent.putExtra("Cliente", clienteObjeto);
-                        intent.putExtra(EXTRA_ID_CLIENTE, clienteObjeto.getDni_cliente());
-                        intent.putExtra(EXTRA_SOCIEDAD,clienteObjeto.getSociedad());
-                        controladorLogin.launch(intent);
-                        finish();
-//>>>>>>> Stashed changes
-
-//                        Intent intent2 = new Intent(getApplicationContext(), MainTree.class);
-//                        intent.putExtra("Cliente", clienteObjeto);
-//                        intent.putExtra(EXTRA_ID_CLIENTE, clienteObjeto.getDni_cliente());
-//                        controladorLogin.launch(intent2);
-//                        finish();
-//
-//                        Intent intent3 = new Intent(getApplicationContext(), FileTreeFragment.class);
-//                        intent.putExtra("Cliente", clienteObjeto);
-//                        intent.putExtra(EXTRA_ID_CLIENTE, clienteObjeto.getDni_cliente());
-//                        controladorLogin.launch(intent3);
-//                        finish();
-
-
                 } else {
-
-                    AlphaAnimation animation = new AlphaAnimation(0, 1);
-                    animation.setDuration(4000);
-                    alert.startAnimation(animation);
-                    alert.setVisibility(View.VISIBLE);
-                    Log.d(TAG, "Hola estoy aqui en cliente creando la alarma");
-                    AlphaAnimation animation2 = new AlphaAnimation(1, 0);
-                    animation2.setDuration(4000);
-                    alert.startAnimation(animation2);
-                    alert.setVisibility(View.INVISIBLE);
-                    Log.d(TAG, "Hola estoy aqui en cliente apagando la alarma");
-
+                    Log.d(TAG, "Count failed: ", taskCountCliente.getException());
                 }
             });
+
         });
 
         olvidar.setOnClickListener(view -> {
@@ -277,4 +285,8 @@ public class Login extends AppCompatActivity {
         });
 
     }
+
+//    public void selectGestor() {
+
+//    }
 }

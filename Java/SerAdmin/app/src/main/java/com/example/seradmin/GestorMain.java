@@ -15,6 +15,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.seradmin.InterfazUsuari.InterfazUsuario;
+import com.example.seradmin.InterfazUsuari.Navegador;
 import com.example.seradmin.Recycler.*;
 import com.example.seradmin.Recycler.Cliente;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -59,7 +60,7 @@ public class GestorMain extends AppCompatActivity {
         anadirCliente = findViewById(R.id.añadir);
         buscador = findViewById(R.id.buscador);
 
-        imagenGestor = findViewById(R.id.LogOut);
+        imagenGestor = findViewById(R.id.perfilImagenGestor);
 
         RVClientes = (RecyclerView) findViewById(R.id.RVClientes);
         RVClientes.setHasFixedSize(true);
@@ -185,7 +186,8 @@ public class GestorMain extends AppCompatActivity {
                 aL.setClickListener(new AdaptadorListado.ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, Cliente cliente) {
-                        Intent intent = new Intent(GestorMain.this, InterfazUsuario.class);
+                        //Intent intent = new Intent(GestorMain.this, InterfazUsuario.class);
+                        Intent intent = new Intent(GestorMain.this, Navegador.class);
                         intent.putExtra("Detalle", CLAVE_LISTA);
                         intent.putExtra("Cliente", cliente);
                         controladorGestor.launch(intent);

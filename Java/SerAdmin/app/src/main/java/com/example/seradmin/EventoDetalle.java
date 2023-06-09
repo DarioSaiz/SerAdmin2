@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.seradmin.InterfazUsuari.InterfazUsuario;
+import com.example.seradmin.InterfazUsuari.Navegador;
 import com.example.seradmin.database.eventosDatabase.Evento;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -220,7 +221,7 @@ public class EventoDetalle extends AppCompatActivity {
 
     public void volverEventoMain (int clave) {
 
-        Intent intent = new Intent(EventoDetalle.this, InterfazUsuario.class);
+        Intent intent = new Intent(EventoDetalle.this, Navegador.class);
         setResult(clave , intent);
         //intent.putExtra("Cliente", cliente);
         EventoDetalle.super.onBackPressed();
