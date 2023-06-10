@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -39,10 +40,12 @@ public class ClienteDetalle extends AppCompatActivity {
 
     private EditText nombreCliente, apellidoCliente, dniCliente, dniGestor, telefonoCliente, passCliente;
     private Cliente perfil;
+    private TextView alertDniClienteDetalle;
     private Button eliminarCliente, modificarCliente;
     ImageView editarNombre, editarApellido, editarDniCliente, editarDniGestor, editarTelefono, editarPass;
     FirebaseFirestore db;
     Cliente cliente = new Cliente();
+    Gestor gestor = new Gestor();
 
     public static final int CLAVE_CLIENTE_MODIFICADO = 80;
     public static final int CLAVE_CLIENTE_ELIMINADO = 81;
@@ -62,9 +65,24 @@ public class ClienteDetalle extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         if (getIntent().getExtras() != null) {
+            if (getIntent().getExtras().containsKey("Gestor")) {
+                gestor = (Gestor) getIntent().getSerializableExtra("Gestor");
+                if (gestor != null) {
+                    Log.d(TAG, gestor.toString());
+                    Log.d(TAG, "Hola " + "No debería estar aqui si vengo de cliente directo");
+                } else {
+                    dniCliente.setFocusable(false);
+                    dniCliente.setFocusableInTouchMode(false);
+                    dniCliente.setKeyListener(null);
+                    dniCliente.setClickable(false);
+                    Log.d(TAG , "Hola " + "Estoy aquí en el else de gestor cliente detalle");
+                }
+            }
+
             if (getIntent().getExtras().containsKey("Cliente")) {
                 cliente = (Cliente) getIntent().getSerializableExtra("Cliente");
-                //Log.d(TAG , "ID: " + cliente.getId());
+                dniCliente.setEnabled(false);
+                Log.d(TAG , "ID: " + cliente.getId());
             }
         }
         selectCliente(db , cliente.getId());
@@ -79,6 +97,7 @@ public class ClienteDetalle extends AppCompatActivity {
         //dniGestor = findViewById(R.id.dniGestorEditableClienteDetalle);
         telefonoCliente = findViewById(R.id.telefonoEditableClienteDetalle);
         passCliente = findViewById(R.id.passwordEditableClienteDetalle);
+        alertDniClienteDetalle = findViewById(R.id.alertdniGestorClienteDetalle);
 
         eliminarCliente = findViewById(R.id.eliminarCliente);
         modificarCliente = findViewById(R.id.modificarCliente);
@@ -172,6 +191,17 @@ public class ClienteDetalle extends AppCompatActivity {
 
             volverGestorMain(CLAVE_CLIENTE_MODIFICADO);
 
+        });
+
+        dniCliente.setOnClickListener(v -> {
+            AlphaAnimation animation = new AlphaAnimation(0, 1);
+            animation.setDuration(4000);
+            alertDniClienteDetalle.startAnimation(animation);
+            alertDniClienteDetalle.setVisibility(View.VISIBLE);
+            AlphaAnimation animation2 = new AlphaAnimation(1, 0);
+            animation2.setDuration(4000);
+            alertDniClienteDetalle.startAnimation(animation2);
+            alertDniClienteDetalle.setVisibility(View.INVISIBLE);
         });
 
     }

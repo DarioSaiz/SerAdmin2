@@ -71,15 +71,15 @@ public class AdaptadorListado extends RecyclerView.Adapter<AdaptadorListado.View
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView nomClienteCajaPerfiles1;
-        //private final TextView letraNombre;
-        private final ImageView imagenCajaPerfiles;
+        private final TextView letraNombre;
+        //private final ImageView imagenCajaPerfiles;
 
         public ViewHolder(View v) {
             super(v);
             v.setOnClickListener(this);
             nomClienteCajaPerfiles1 = (TextView) v.findViewById(R.id.nomClienteCajaPerfiles1);
-            //letraNombre = (TextView) v.findViewById(R.id.Letra);
-            imagenCajaPerfiles = (ImageView) v.findViewById(R.id.imagenCajaPerfiles);
+            letraNombre = (TextView) v.findViewById(R.id.LetraPerfiles);
+            //imagenCajaPerfiles = (ImageView) v.findViewById(R.id.LetraPerfiles);
 
         }
 
@@ -88,13 +88,13 @@ public class AdaptadorListado extends RecyclerView.Adapter<AdaptadorListado.View
             return nomClienteCajaPerfiles1;
         }
 
-//        public TextView getLetraNom() {
-//            return letraNombre;
-//        }
-
-        public ImageView getImagenPerfil() {
-            return imagenCajaPerfiles;
+        public TextView getLetraNom() {
+            return letraNombre;
         }
+
+//        public ImageView getImagenPerfil() {
+//            return imagenCajaPerfiles;
+//        }
 
         public void onClick(View view) {
             // Si tengo un manejador de evento lo propago con el índice
@@ -113,15 +113,15 @@ public class AdaptadorListado extends RecyclerView.Adapter<AdaptadorListado.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-//      String letraActual = perfilesList.get(position).getLetra();
-//      String letraSiguiente = "";
+      String letraActual = perfilesArrayList.get(position).getLetra();
+      String letraSiguiente = "";
         holder.getNomCliente().setText(perfilesArrayList.get(position).getNombre() + " "  + perfilesArrayList.get(position).getApellidos());
-        //holder.getLetraNom().setText(perfilesArrayList.get(position).getLetra());
+        holder.getLetraNom().setText(perfilesArrayList.get(position).getLetra());
         //holder.getImagenPerfil().setImageResource(perfilesList.get(position).getImagen());
-//      if (letraActual != letraSiguiente) {
-//          holder.getLetraNom().setText(perfilesList.get(position).getLetra());
-//      }
-//      letraSiguiente = perfilesList.get(position).getLetra();
+      if (letraActual != letraSiguiente) {
+          holder.getLetraNom().setText(perfilesArrayList.get(position).getLetra());
+      }
+      letraSiguiente = perfilesArrayList.get(position).getLetra();
     }
 
     @Override

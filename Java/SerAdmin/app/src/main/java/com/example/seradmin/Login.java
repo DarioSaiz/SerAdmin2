@@ -44,6 +44,7 @@ public class Login extends AppCompatActivity {
     Button login;
     EditText usuario, contraseña;
     TextView crearCuenta, olvidar, alert;
+    Long countCliente, countGestor;
 
     FirebaseFirestore db;
 
@@ -76,37 +77,7 @@ public class Login extends AppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     //Log.d(TAG, "Vuelve cancelado");
                     int code = result.getResultCode();
-                    /*switch (code) {
-                        case RESULT_CANCELED:
-                            break;
-                        case CLAVE_INGRESAR:
-                            Log.d(TAG, "NUEVO INGRESO");
-                            PerfilesImagen nuevoPerfil = (PerfilesImagen) result.getData().getSerializableExtra(mensaje);
-                            completo.add(nuevoPerfil);
-                            contactoDao.insert(nuevoPerfil);
-                            AdaptadorListado = new AdaptadorListado(completo, listener);
-                            rV.setAdapter(AdaptadorListado);
-                            break;
 
-                        case CLAVE_VOLVER:
-                            AdaptadorListado = new AdaptadorListado(completo, listener);
-                            rV.setAdapter(AdaptadorListado);
-                            break;
-
-                        case CLAVE_ELIMINAR:
-                            Log.d(TAG, "NUEVO ELIMINADO");
-                            //Intent elim = result.getData();
-                            String nom = result.getData().getStringExtra(mensaje2);
-                            Log.d(TAG, nom);
-                            PerfilesImagen elimPerfil = contactoDao.findByName(nom);
-                            Log.d(TAG, elimPerfil.getNombre());
-                            completo.remove(elimPerfil);
-                            contactoDao.delete(elimPerfil);
-                            AdaptadorListado = new AdaptadorImagen(completo, listener);
-                            rV.setAdapter(AdaptadorListado);
-                            break;
-
-                    }*/
 
                 });
 
@@ -151,15 +122,17 @@ public class Login extends AppCompatActivity {
                     // Count fetched successfully
                     AggregateQuerySnapshot snapshot = taskCountGestor.getResult();
                     Log.d(TAG, "Count: " + snapshot.getCount());
+                    setCountGestor(snapshot.getCount());
                     if (snapshot.getCount() != 0) {
                         gestor.get().addOnCompleteListener(task -> {
-                            String g_dni = "", g_pass = "", g_nombre = "", g_apellido = "", g_telefono = "";
+                            String g_id = "", g_dni = "", g_pass = "", g_nombre = "", g_apellido = "", g_telefono = "";
 
                             if (task.isSuccessful()) {
 
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     Log.d(TAG, document.getId() + " => " + document.getData());
 
+                                    g_id = document.getId();
                                     g_dni = document.get("DNI").toString();
                                     g_pass = document.get("Contraseña").toString();
                                     g_nombre = document.get("Nombre").toString();
@@ -168,7 +141,7 @@ public class Login extends AppCompatActivity {
 
                                 }
 
-                                Gestor gestorObjeto = new Gestor(g_dni, g_pass, g_nombre, g_apellido, g_telefono);
+                                Gestor gestorObjeto = new Gestor(g_id, g_dni, g_pass, g_nombre, g_apellido, g_telefono);
 
                                 Intent intent = new Intent(Login.this, GestorMain.class);
                                 //Bundle bundle = new Bundle();
@@ -185,90 +158,84 @@ public class Login extends AppCompatActivity {
                         });
                     } else {
 
-                        AlphaAnimation animation = new AlphaAnimation(0, 1);
-                        animation.setDuration(4000);
-                        alert.startAnimation(animation);
-                        alert.setVisibility(View.VISIBLE);
-                        Log.d(TAG, "Hola estoy aqui en gestor creando la alarma");
-                        AlphaAnimation animation2 = new AlphaAnimation(1, 0);
-                        animation2.setDuration(4000);
-                        alert.startAnimation(animation2);
-                        alert.setVisibility(View.INVISIBLE);
-                        Log.d(TAG, "Hola estoy aqui en gestor apagando la alarma");
+                        countCliente.get(AggregateSource.SERVER).addOnCompleteListener(taskCountCliente -> {
+                            if (taskCountCliente.isSuccessful()) {
+                                // Count fetched successfully
+                                AggregateQuerySnapshot snapshotCliente = taskCountCliente.getResult();
+                                setCountCliente(snapshotCliente.getCount());
+                                Log.d(TAG, "Count: " + snapshotCliente.getCount());
+                                if (snapshotCliente.getCount() != 0) {
+                                    cliente.get().addOnCompleteListener(task -> {
+                                        String c_id = "", c_dni = "", c_dni_gestor = "", c_pass = "", c_nombre = "", c_apellido = "", c_telefono = "", c_sociedad = "";
+
+                                        if (task.isSuccessful()) {
+
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                                c_id = document.getId();
+                                                c_dni = document.get("DNI").toString();
+                                                c_pass = document.get("Contraseña").toString();
+                                                c_nombre = document.get("Nombre").toString();
+                                                c_apellido = document.get("Apellido").toString();
+                                                c_telefono = document.get("Num_Telf").toString();
+                                                c_dni_gestor = document.get("DNI_Gestor").toString();
+                                                c_sociedad = document.get("Sociedad").toString();
+
+                                            }
+
+                                            Cliente clienteObjeto = new Cliente(c_id, c_nombre, c_apellido, c_dni, c_dni_gestor, c_telefono, c_pass, c_sociedad);
+
+                                            Intent intent = new Intent(getApplicationContext(), Navegador.class);
+                                            intent.putExtra("Cliente", clienteObjeto);
+                                            intent.putExtra(EXTRA_ID_CLIENTE, clienteObjeto.getDni_cliente());
+                                            intent.putExtra(EXTRA_SOCIEDAD, clienteObjeto.getSociedad());
+                                            controladorLogin.launch(intent);
+                                            finish();
+
+                                        } else {
+                                            Log.d(TAG, "Count failed: ", task.getException());
+                                        }
+                                    });
+                                } else {
+
+                                    if (!dni.equals("") || !pass.equals("")) {
+
+                                        AlphaAnimation animation = new AlphaAnimation(0, 1);
+                                        animation.setDuration(4000);
+                                        alert.setText("DNI o Contraseña incorrectos");
+                                        alert.startAnimation(animation);
+                                        alert.setVisibility(View.VISIBLE);
+                                        Log.d(TAG, "Hola estoy aqui en cliente creando la alarma");
+                                        AlphaAnimation animation2 = new AlphaAnimation(1, 0);
+                                        animation2.setDuration(4000);
+                                        alert.startAnimation(animation2);
+                                        alert.setVisibility(View.INVISIBLE);
+                                        Log.d(TAG, "Hola estoy aqui en cliente apagando la alarma");
+                                    }
+                                }
+                            } else {
+                                Log.d(TAG, "Count failed: ", taskCountCliente.getException());
+                            }
+                        });
+
+//                        AlphaAnimation animation = new AlphaAnimation(0, 1);
+//                        animation.setDuration(4000);
+//                        alert.startAnimation(animation);
+//                        alert.setVisibility(View.VISIBLE);
+//                        Log.d(TAG, "Hola estoy aqui en gestor creando la alarma");
+//                        AlphaAnimation animation2 = new AlphaAnimation(1, 0);
+//                        animation2.setDuration(4000);
+//                        alert.startAnimation(animation2);
+//                        alert.setVisibility(View.INVISIBLE);
+//                        Log.d(TAG, "Hola estoy aqui en gestor apagando la alarma");
                     }
                 } else {
                     Log.d(TAG, "Count failed: ", taskCountGestor.getException());
                 }
             });
 
-            countCliente.get(AggregateSource.SERVER).addOnCompleteListener(taskCountCliente -> {
-                if (taskCountCliente.isSuccessful()) {
-                    // Count fetched successfully
-                    AggregateQuerySnapshot snapshot = taskCountCliente.getResult();
-                    Log.d(TAG, "Count: " + snapshot.getCount());
-                    if (snapshot.getCount() != 0) {
-                        cliente.get().addOnCompleteListener(task -> {
-                            String c_dni = "", c_dni_gestor = "", c_pass = "", c_nombre = "", c_apellido = "", c_telefono = "", c_sociedad = "";
 
-                            if (task.isSuccessful()) {
-
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d(TAG, document.getId() + " => " + document.getData());
-
-                                    c_dni = document.get("DNI").toString();
-                                    c_pass = document.get("Contraseña").toString();
-                                    c_nombre = document.get("Nombre").toString();
-                                    c_apellido = document.get("Apellido").toString();
-                                    c_telefono = document.get("Num_Telf").toString();
-                                    c_dni_gestor = document.get("DNI_Gestor").toString();
-                                    c_sociedad = document.get("Sociedad").toString();
-
-                                }
-
-                                Cliente clienteObjeto = new Cliente(c_nombre, c_apellido, c_dni, c_dni_gestor, c_telefono, c_pass, c_sociedad);
-
-                                Intent intent = new Intent(getApplicationContext(), Navegador.class);
-                                intent.putExtra("Cliente", clienteObjeto);
-                                intent.putExtra(EXTRA_ID_CLIENTE, clienteObjeto.getDni_cliente());
-                                intent.putExtra(EXTRA_SOCIEDAD, clienteObjeto.getSociedad());
-                                controladorLogin.launch(intent);
-                                finish();
-
-                                if (dni.equals("") || pass.equals("")) {
-
-                                    AlphaAnimation animation = new AlphaAnimation(0, 1);
-                                    animation.setDuration(4000);
-                                    alert.setText("DNI o Contraseña vacíos");
-                                    alert.startAnimation(animation);
-                                    alert.setVisibility(View.VISIBLE);
-                                    Log.d(TAG, "Hola estoy aqui en cliente creando la alarma");
-                                    AlphaAnimation animation2 = new AlphaAnimation(1, 0);
-                                    animation2.setDuration(4000);
-                                    alert.startAnimation(animation2);
-                                    alert.setVisibility(View.INVISIBLE);
-                                    Log.d(TAG, "Hola estoy aqui en cliente apagando la alarma");
-
-                                }
-                            } else {
-                                Log.d(TAG, "Count failed: ", task.getException());
-                            }
-                        });
-                    } else {
-                        AlphaAnimation animation = new AlphaAnimation(0, 1);
-                        animation.setDuration(4000);
-                        alert.startAnimation(animation);
-                        alert.setVisibility(View.VISIBLE);
-                        Log.d(TAG, "Hola estoy aqui en cliente creando la alarma");
-                        AlphaAnimation animation2 = new AlphaAnimation(1, 0);
-                        animation2.setDuration(4000);
-                        alert.startAnimation(animation2);
-                        alert.setVisibility(View.INVISIBLE);
-                        Log.d(TAG, "Hola estoy aqui en cliente apagando la alarma");
-                    }
-                } else {
-                    Log.d(TAG, "Count failed: ", taskCountCliente.getException());
-                }
-            });
 
         });
 
@@ -284,6 +251,22 @@ public class Login extends AppCompatActivity {
             controladorLogin.launch(intent);
         });
 
+    }
+
+    public void getCountGestor() {
+
+    }
+
+    public void getCountCliente() {
+
+    }
+
+    public void setCountGestor(Long countGestor) {
+        this.countGestor = countGestor;
+    }
+
+    public void setCountCliente(Long countCliente) {
+        this.countCliente = countCliente;
     }
 
 //    public void selectGestor() {

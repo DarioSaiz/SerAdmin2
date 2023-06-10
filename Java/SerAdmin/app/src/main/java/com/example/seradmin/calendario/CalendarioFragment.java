@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -20,65 +22,54 @@ import com.example.seradmin.Recycler.Cliente;
 import com.example.seradmin.Tree.MainTree;
 import com.example.seradmin.database.eventosDatabase.Evento;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.joda.time.DateTime;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Calendario extends AppCompatActivity {
+public class CalendarioFragment extends Fragment {
 
     FloatingActionButton add;
     Cliente cliente = new Cliente();
     ImageView home,files,calendar;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calendario);
-        add = findViewById(R.id.add);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_calendario, container, false);
+        add = view.findViewById(R.id.add);
         add.setVisibility(View.VISIBLE);
 
 //        home = findViewById(R.id.home);
 //        files = findViewById(R.id.files);
 //        calendar = findViewById(R.id.calendar);
 
-        if (getIntent().getExtras() != null) {
-            if (getIntent().getExtras().containsKey("Cliente")) {
-                cliente = (Cliente) getIntent().getSerializableExtra("Cliente");
+        if (getActivity().getIntent().getExtras() != null) {
+            if (getActivity().getIntent().getExtras().containsKey("Cliente")) {
+                cliente = (Cliente) getActivity().getIntent().getSerializableExtra("Cliente");
                 Log.d("Cliente", cliente.getNombre());
             }
         }
 
-//        home.setOnClickListener(view -> {
-//            Intent intent = new Intent(Calendario.this, InterfazUsuario.class);
-//            //intent.putExtra("Home", CLAVE_HOME);
-//            intent.putExtra("Cliente", cliente);
-//            controladorCalendario.launch(intent);
-//            finish();
-//        });
-//
-//        files.setOnClickListener(view -> {
-//            Intent intent = new Intent(Calendario.this, MainTree.class);
-//            intent.putExtra("Cliente", cliente);
-//            //intent.putExtra("Files", CLAVE_FILES);
-//            controladorCalendario.launch(intent);
-//            finish();
-//        });
-
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Calendario.this, EventActivity.class);
+                Intent intent = new Intent(getActivity(), EventActivity.class);
                 intent.putExtra("Cliente", cliente);
                 startActivity(intent);
-                finish();
+                //finish();
             }
         });
 
-        getSupportFragmentManager().
+        getActivity().getSupportFragmentManager().
                 beginTransaction().add(R.id.fragments_holder, new MonthFragment(cliente)).
                 commit();
+
+        return view;
 
     }
 

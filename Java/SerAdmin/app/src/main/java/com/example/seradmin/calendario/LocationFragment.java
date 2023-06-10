@@ -40,7 +40,6 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     OnCallbackReceived mCallback;
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    EditText ubicacion;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,6 +96,13 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
                     }
                 });
 
+//        googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+//            @Override
+//            public void onCameraMove() {
+//                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(googleMap.getCameraPosition().target, 10));
+//            }
+//        });
+
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -115,14 +121,13 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
                 googleMap.addMarker(markerOptions);
 
                 new AlertDialog.Builder(getContext())
-                        .setTitle("¿Estás seguro de que deseas fijar esta localización para el evento?")
+                        .setTitle("¿Fijar esta localización para el evento?")
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 //Guardar en el edit text latitud y longitud
                                 Log.d(TAG, "Selección de localización confirmada");
-                                //ubicacion.setText(markerOptions.getTitle());
                                 // You can Call the event from fragment as mentioned below
                                 // mCallback is the activity context.
                                 mCallback.Update(markerOptions);

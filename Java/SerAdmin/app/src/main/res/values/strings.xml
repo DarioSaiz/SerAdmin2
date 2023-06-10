@@ -293,5 +293,9 @@
     <string name="title_home"></string>
     <string name="title_dashboard"></string>
     <string name="title_notifications"></string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="gestorDetalle">Editar cuenta gestor</string>
+    <string name="clienteDetalle">Editar cuenta cliente</string>
+    <string name="search">Buscar</string>
 
 </resources>

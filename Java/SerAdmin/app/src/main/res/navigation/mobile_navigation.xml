@@ -13,9 +13,9 @@
 
     <fragment
         android:id="@+id/navigation_eventos"
-        android:name="com.example.seradmin.calendario.MonthFragment"
+        android:name="com.example.seradmin.calendario.CalendarioFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_month" />
+        tools:layout="@layout/activity_calendario" />
 
     <fragment
         android:id="@+id/navigation_notifications"

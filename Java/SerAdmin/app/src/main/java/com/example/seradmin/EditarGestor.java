@@ -133,6 +133,7 @@ public class EditarGestor extends AppCompatActivity {
                                         Log.d("GESTOR EDIT ACTUALIZADO", getGestorObject().toString());
                                         intent.putExtras(bundle1);
                                         startActivity(intent);
+                                        finish();
 
                                     } else {
                                         Log.w(TAG, "Error select documento.", task.getException());

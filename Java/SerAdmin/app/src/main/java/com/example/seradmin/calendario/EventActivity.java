@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.seradmin.InterfazUsuari.Navegador;
 import com.example.seradmin.ManejadorFechas;
 import com.example.seradmin.ManejadorHoras;
 import com.example.seradmin.R;
@@ -80,7 +81,7 @@ public class EventActivity extends AppCompatActivity implements LocationFragment
         }
 
         ManejadorFechas manejadorFechaSalida = new ManejadorFechas(event_start_date, getSupportFragmentManager());
-        ManejadorFechas manejadorFechaVuelta = new ManejadorFechas(event_end_date, getSupportFragmentManager());
+        ManejadorFechas manejadorFechaVuelta = new ManejadorFechas(event_end_date, true, event_start_date, getSupportFragmentManager());
 
         event_start_date.setOnClickListener(manejadorFechaSalida);
         event_end_date.setOnClickListener(manejadorFechaVuelta);
@@ -174,7 +175,7 @@ public class EventActivity extends AppCompatActivity implements LocationFragment
         Date dateFin = null;
         Map<String, Object> evento = new HashMap<>();
 
-        if (s_titulo.isEmpty() || stringDateInicio.isEmpty() || stringDateFin.isEmpty() ||
+        if (s_titulo.isEmpty() || stringDateInicio.isEmpty() || stringDateFin.isEmpty() || event_location.getText().toString().isEmpty() ||
                 //latitud.getText().toString().isEmpty() || longitud.getText().toString().isEmpty() ||
                 s_descripcion.isEmpty()) {
 
@@ -235,7 +236,7 @@ public class EventActivity extends AppCompatActivity implements LocationFragment
                     })
                     .addOnFailureListener(e -> Log.w(TAG, "Error insertando evento", e));
 
-            Intent intent = new Intent(EventActivity.this, Calendario.class);
+            Intent intent = new Intent(EventActivity.this, Navegador.class);
             setResult(CLAVE_INSERTADO, intent);
             intent.putExtra("Cliente", cliente);
             EventActivity.super.onBackPressed();

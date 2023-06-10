@@ -8,6 +8,8 @@ import android.widget.TimePicker;
 
 import androidx.fragment.app.FragmentManager;
 
+import java.util.Calendar;
+
 public class ManejadorHoras implements View.OnClickListener {
 
     //EditText hora;
@@ -31,9 +33,26 @@ public class ManejadorHoras implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         if (view.getId() == hora.getId()) {
-            showTimePickerDialog();
+            //showTimePickerDialog();
             //showTimePickerDialog(hora, fragmentManager);
+            showTimePickerDialog(hora);
         }
+    }
+
+    private String twoDigits(int n) {
+        return (n<=9) ? ("0"+n) : String.valueOf(n);
+    }
+
+    public void showTimePickerDialog(final TextView textView) {
+
+        final Calendar c = Calendar.getInstance();
+        int mHour = c.get(Calendar.HOUR_OF_DAY);
+        int mMinute = c.get(Calendar.MINUTE);
+
+        TimePickerDialog tp = new TimePickerDialog(textView.getContext(),
+                (view, hourOfDay, minute) -> textView.setText(twoDigits(hourOfDay) + ":" + twoDigits(minute)), mHour, mMinute, true);
+
+        tp.show();
     }
 
     private void showTimePickerDialog() {

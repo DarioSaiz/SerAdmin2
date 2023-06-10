@@ -38,6 +38,7 @@ public class GestorMain extends AppCompatActivity {
     private static final int CLAVE_AÑADIR = 56;
     private static final String TAG = "";
     private static final int CLAVE_EDITAR_GESTOR = 57;
+    private static final int CLAVE_LOGOUT = 58;
     RecyclerView RVClientes;
     SearchView buscador;
     AdaptadorListado aL = new AdaptadorListado();
@@ -48,7 +49,7 @@ public class GestorMain extends AppCompatActivity {
     Bundle extra = new Bundle();
     Intent i = new Intent();
     private String dni_gestor = "";
-    CircleImageView imagenGestor;
+    CircleImageView imagenGestor, logout;
     Class<Gestor> classGestor;
     Gestor gestor = new Gestor();
 
@@ -59,6 +60,7 @@ public class GestorMain extends AppCompatActivity {
 
         anadirCliente = findViewById(R.id.añadir);
         buscador = findViewById(R.id.buscador);
+        logout = findViewById(R.id.logout);
 
         imagenGestor = findViewById(R.id.perfilImagenGestor);
 
@@ -94,7 +96,7 @@ public class GestorMain extends AppCompatActivity {
                 //intent.putExtra("DNI_Gestor", gestor.getDNI());
                 intent.putExtra("Gestor", gestor);
                 controladorGestor.launch(intent);
-                finish();
+
             }
         });
 
@@ -117,6 +119,15 @@ public class GestorMain extends AppCompatActivity {
         imagenGestor.setOnClickListener(v -> {
             Intent intent = new Intent(GestorMain.this, EditarGestor.class);
             intent.putExtra("Editar", CLAVE_EDITAR_GESTOR);
+            //intent.putExtra("DNI_Gestor", gestor.getDNI());
+            intent.putExtra("Gestor", gestor);
+            controladorGestor.launch(intent);
+
+        });
+
+        logout.setOnClickListener(v -> {
+            Intent intent = new Intent(GestorMain.this, Login.class);
+            intent.putExtra("Editar", CLAVE_LOGOUT);
             //intent.putExtra("DNI_Gestor", gestor.getDNI());
             intent.putExtra("Gestor", gestor);
             controladorGestor.launch(intent);
@@ -191,7 +202,7 @@ public class GestorMain extends AppCompatActivity {
                         intent.putExtra("Detalle", CLAVE_LISTA);
                         intent.putExtra("Cliente", cliente);
                         controladorGestor.launch(intent);
-                        finish();
+
                     }
                 });
             }

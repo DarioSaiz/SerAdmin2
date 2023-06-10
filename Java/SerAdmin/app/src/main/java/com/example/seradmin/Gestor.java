@@ -1,13 +1,29 @@
 package com.example.seradmin;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
 
 public class Gestor implements Serializable {
+
+    // Exclude previene que no lo escribamos, el id se autogenera
+    @Exclude
+    public String id;
+
     private String Apellido;
     private String Contraseña;
     private String DNI;
     private String Nombre;
     private String Num_Telf;
+
+    public Gestor(String id, String dni, String contraseña, String nombre, String apellido, String num_telf) {
+        this.id = id;
+        Apellido = apellido;
+        Contraseña = contraseña;
+        DNI = dni;
+        Nombre = nombre;
+        Num_Telf = num_telf;
+    }
 
     public Gestor(String dni, String contraseña, String nombre, String apellido, String num_telf) {
         Apellido = apellido;
@@ -33,6 +49,14 @@ public class Gestor implements Serializable {
 
     public void setContraseña(String contraseña) {
         Contraseña = contraseña;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDNI() {
