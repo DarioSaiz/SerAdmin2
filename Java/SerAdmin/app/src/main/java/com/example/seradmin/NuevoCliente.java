@@ -38,7 +38,7 @@ public class NuevoCliente extends AppCompatActivity {
     EditText nombre, apellido, contraseña, num_tel, dni, dni_gestor;
     Button crearCliente;
     ImageView imagen;
-    TextView alertDNI, alertTel, alertCon, alertNom, alertApe, alertVerifyDNI, alertVerifyTel;
+    TextView alertDNI, alertTel, alertCon, alertNom, alertApe, alertVerifyDNI, alertVerifyTel, alertTS;
     Gestor gestor = new Gestor();
 
     @Override
@@ -65,6 +65,7 @@ public class NuevoCliente extends AppCompatActivity {
         alertApe = findViewById(R.id.alertA);
         alertVerifyDNI = findViewById(R.id.alertVerifyDNI);
         alertVerifyTel = findViewById(R.id.alertVerifyTel);
+        alertTS = findViewById(R.id.alertTS);
 
         if (getIntent().getExtras() != null) {
             if (getIntent().getExtras().containsKey("Gestor")) {
@@ -129,7 +130,7 @@ public class NuevoCliente extends AppCompatActivity {
             Pattern telPattern = Pattern.compile("^[76]{1}[0-9]{8}$");
             Pattern loQueSeaPattern = Pattern.compile("^(?!\\s*$).+");
 
-            if ((dniPattern.matcher(s_dni).matches() || niePattern.matcher(s_dni).matches()) && telPattern.matcher(s_num).matches() && loQueSeaPattern.matcher(s_cont).matches() && loQueSeaPattern.matcher(s_nom).matches() && loQueSeaPattern.matcher(s_ape).matches()) {
+            if ((dniPattern.matcher(s_dni).matches() || niePattern.matcher(s_dni).matches()) && telPattern.matcher(s_num).matches() && loQueSeaPattern.matcher(s_cont).matches() && loQueSeaPattern.matcher(s_nom).matches() && loQueSeaPattern.matcher(s_ape).matches() && !s_sociedad.equals("Tipo de Sociedad")) {
 
                 //VERIFICAR DNI Y TEL
 
@@ -288,6 +289,17 @@ public class NuevoCliente extends AppCompatActivity {
                     alertApe.startAnimation(animation2);
                     alertApe.setVisibility(View.INVISIBLE);
 
+                }
+
+                if (s_sociedad.equals("Tipo de Sociedad")) {
+                    AlphaAnimation animation = new AlphaAnimation(0, 1);
+                    animation.setDuration(4000);
+                    alertTS.startAnimation(animation);
+                    alertTS.setVisibility(View.VISIBLE);
+                    AlphaAnimation animation2 = new AlphaAnimation(1, 0);
+                    animation2.setDuration(4000);
+                    alertTS.startAnimation(animation2);
+                    alertTS.setVisibility(View.INVISIBLE);
                 }
             }
 

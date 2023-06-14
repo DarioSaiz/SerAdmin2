@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TreeViewAdapter extends RecyclerView.Adapter<TreeViewHolder> {
@@ -194,6 +195,8 @@ public class TreeViewAdapter extends RecyclerView.Adapter<TreeViewHolder> {
 //     * Update the list of tree nodes
 //     * @param treeNodes The new tree nodes
 //     */
+
+
     public void updateTreeNodes(List<TreeNode> treeNodes) {
         treeNodeManager.updateNodes(treeNodes);
         notifyDataSetChanged();
@@ -207,8 +210,31 @@ public class TreeViewAdapter extends RecyclerView.Adapter<TreeViewHolder> {
         treeNodeManager.clearNodes();
         notifyItemRangeRemoved(0, size);
     }
+    public void removeNodeByValue(Object value) {
+        TreeNode rootNode = treeNodeManager.getRootNode();
+        if (rootNode == null) {
+            return;
+        }
 
-//    /**
+        List<TreeNode> queue = new ArrayList<>();
+        queue.add(rootNode);
+
+        while (!queue.isEmpty()) {
+            TreeNode currentNode = queue.remove(0);
+            if (currentNode.getValue().equals(value)) {
+                TreeNode parentNode = currentNode.getParent();
+                if (parentNode != null) {
+                    parentNode.deleteChild(currentNode);
+                    notifyDataSetChanged();
+                }
+                return;
+            }
+            queue.addAll(currentNode.getChildren());
+        }
+    }
+
+
+    //    /**
 //     * Register a callback to be invoked when this TreeNode is clicked
 //     * @param listener The callback that will run
 //     */

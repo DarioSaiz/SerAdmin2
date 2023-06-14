@@ -27,7 +27,7 @@ public class FileViewHolder extends TreeViewHolder {
         fileName = itemView.findViewById(R.id.file_name);
         fileStateIcon = itemView.findViewById(R.id.file_state_icon);
         fileTypeIcon = itemView.findViewById(R.id.file_type_icon);
-        deleteButton = itemView.findViewById(R.id.delete_button);
+        //deleteButton = itemView.findViewById(R.id.delete_button);
     }
 
     @Override

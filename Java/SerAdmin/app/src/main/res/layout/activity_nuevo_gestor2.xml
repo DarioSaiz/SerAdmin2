@@ -175,7 +175,17 @@
             android:splitMotionEvents="false"
             android:touchscreenBlocksFocus="false" />
 
-        <Button
+            <TextView
+                android:id="@+id/alertTS"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-15dp"
+                android:text="Elige un tipo de sociedad"
+                android:textColor="@color/carrot_orange"
+                android:visibility="invisible"
+                app:layout_constraintTop_toBottomOf="@+id/sociedad2" />
+
+            <Button
             android:id="@+id/crear"
             android:layout_width="@dimen/ancho_cajas_texto"
             android:layout_height="@dimen/alto_boton"

@@ -17,6 +17,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -35,7 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 
-public class LocationFragment extends Fragment implements OnMapReadyCallback {
+public class LocationFragment extends DialogFragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     OnCallbackReceived mCallback;

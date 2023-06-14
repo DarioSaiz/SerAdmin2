@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -49,7 +50,8 @@ public class GestorMain extends AppCompatActivity {
     Bundle extra = new Bundle();
     Intent i = new Intent();
     private String dni_gestor = "";
-    CircleImageView imagenGestor, logout;
+    CircleImageView imagenGestor;
+    ImageView logout;
     Class<Gestor> classGestor;
     Gestor gestor = new Gestor();
 
@@ -60,7 +62,7 @@ public class GestorMain extends AppCompatActivity {
 
         anadirCliente = findViewById(R.id.añadir);
         buscador = findViewById(R.id.buscador);
-        logout = findViewById(R.id.logout);
+        logout = findViewById(R.id.logoNC);
 
         imagenGestor = findViewById(R.id.perfilImagenGestor);
 
@@ -201,6 +203,7 @@ public class GestorMain extends AppCompatActivity {
                         Intent intent = new Intent(GestorMain.this, Navegador.class);
                         intent.putExtra("Detalle", CLAVE_LISTA);
                         intent.putExtra("Cliente", cliente);
+                        intent.putExtra("Gestor", gestor);
                         controladorGestor.launch(intent);
 
                     }

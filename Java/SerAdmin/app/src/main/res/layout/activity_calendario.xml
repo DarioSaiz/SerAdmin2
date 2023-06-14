@@ -17,12 +17,10 @@
 
         <ImageView
             android:id="@+id/logOutFinal"
-            android:layout_width="10dp"
-            android:layout_height="43dp"
+            android:layout_width="29dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
-            android:backgroundTint="#00FFFFFF"
-            android:scaleType="centerInside"
-            android:src="@drawable/logout_blanco_com" />
+            app:srcCompat="@drawable/logout_blanco_com" />
 
         <SearchView
             android:id="@+id/buscador"

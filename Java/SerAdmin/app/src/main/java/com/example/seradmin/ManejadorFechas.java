@@ -53,7 +53,12 @@ public class ManejadorFechas implements View.OnClickListener {
                 showDatePickerDialog(fecha, (Date.from(Instant.now())).getTime());
             } else {
                 try {
-                    showDatePickerDialog(fecha, (df.parse(fechaIda.getText().toString())).getTime());
+                    if (fechaIda.getText().toString().contains(":")) {
+                        String fechaEdit = fechaIda.getText().toString().substring(fechaIda.getText().toString().indexOf(":") + 2);
+                        showDatePickerDialog(fecha, (df.parse(fechaEdit).getTime()));
+                    } else {
+                        showDatePickerDialog(fecha, (df.parse(fechaIda.getText().toString())).getTime());
+                    }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

@@ -82,5 +82,12 @@ public class TreeNode {
                 child.setLevel(node.getLevel() + 1);
             }
         }
+        public void deleteChild(TreeNode child) {
+            if (children != null && children.contains(child)) {
+                children.remove(child);
+            }
+        }
+    }
 
-}
+
+

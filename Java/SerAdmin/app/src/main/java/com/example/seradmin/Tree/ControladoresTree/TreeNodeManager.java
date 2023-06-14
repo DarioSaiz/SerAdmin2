@@ -45,6 +45,7 @@ public class TreeNodeManager {
         listaNodos.addAll(newNodes);
     }
 
+
     /**
      * Delete one node from the visible nodes
      * @param node to delete it from the current nodes
@@ -211,5 +212,11 @@ public class TreeNodeManager {
             TreeNode root = listaNodos.get(i);
             expandNodeBranch(root);
         }
+    }
+    public TreeNode getRootNode() {
+        if (!listaNodos.isEmpty()) {
+            return listaNodos.getFirst();
+        }
+        return null;
     }
 }

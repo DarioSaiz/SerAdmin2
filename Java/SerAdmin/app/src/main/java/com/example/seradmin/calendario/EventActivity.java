@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -39,18 +40,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import yuku.ambilwarna.AmbilWarnaDialog;
+//import top.defaults.colorpicker.ColorPickerPopup;
 
 public class EventActivity extends AppCompatActivity implements LocationFragment.OnCallbackReceived {
 
     private static final int CLAVE_INSERTADO = 90;
     EditText event_title, event_location, event_description;
     AppCompatCheckBox event_all_day;
-    TextView event_start_date, event_start_time, event_end_date, event_end_time, event_repetition;
-    ImageView event_color, event_show_on_map;
+    TextView event_start_date, event_start_time, event_end_date, event_end_time, event_color;
+    ImageView event_color_image, event_show_on_map;
     MaterialToolbar event_toolbar;
     Button crearEvento;
     Cliente cliente = new Cliente();
     FirebaseFirestore db;
+    private int mDefaultColor = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +69,8 @@ public class EventActivity extends AppCompatActivity implements LocationFragment
         event_start_time = (TextView) findViewById(R.id.event_start_time);
         event_end_date = (TextView) findViewById(R.id.event_end_date);
         event_end_time = (TextView) findViewById(R.id.event_end_time);
-        event_repetition = (TextView) findViewById(R.id.event_repetition);
-        event_color = (ImageView) findViewById(R.id.event_color);
+        event_color = (TextView) findViewById(R.id.event_color);
+        event_color_image = (ImageView) findViewById(R.id.event_color_image);
         //crearEvento = (Button) findViewById(R.id.crearEvento);
         event_toolbar = (MaterialToolbar) findViewById(R.id.event_toolbar);
         db = FirebaseFirestore.getInstance();
@@ -149,12 +153,12 @@ public class EventActivity extends AppCompatActivity implements LocationFragment
 //
 //        });
 
-        event_location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                abrirMapa();
-            }
-        });
+//        event_location.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                abrirMapa();
+//            }
+//        });
 
         event_show_on_map.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,21 +167,84 @@ public class EventActivity extends AppCompatActivity implements LocationFragment
             }
         });
 
+        event_color_image.setOnClickListener(v -> {
+//            new ColorPickerPopup.Builder(EventActivity.this).initialColor(
+//                            Color.RED) // set initial color
+//                    // of the color
+//                    // picker dialog
+//                    .enableBrightness(
+//                            true) // enable color brightness
+//                    // slider or not
+//                    .enableAlpha(
+//                            true) // enable color alpha
+//                    // changer on slider or
+//                    // not
+//                    .okTitle(
+//                            "Choose") // this is top right
+//                    // Choose button
+//                    .cancelTitle(
+//                            "Cancel") // this is top left
+//                    // Cancel button which
+//                    // closes the
+//                    .showIndicator(
+//                            true) // this is the small box
+//                    // which shows the chosen
+//                    // color by user at the
+//                    // bottom of the cancel
+//                    // button
+//                    .showValue(
+//                            true) // this is the value which
+//                    // shows the selected
+//                    // color hex code
+//                    // the above all values can be made
+//                    // false to disable them on the
+//                    // color picker dialog.
+//                    .build()
+//                    .show(
+//                            v,
+//                            new ColorPickerPopup.ColorPickerObserver() {
+//                                @Override
+//                                public void
+//                                onColorPicked(int color) {
+//                                    // set the color
+//                                    // which is returned
+//                                    // by the color
+//                                    // picker
+//                                    mDefaultColor = color;
+//
+//                                    // now as soon as
+//                                    // the dialog closes
+//                                    // set the preview
+//                                    // box to returned
+//                                    // color
+//                                    //mColorPreview.setBackgroundColor(mDefaultColor);
+//                                }
+//                            });
+            openColorPickerDialogue();
+        });
+
     }
 
     public Map<String, Object> prepararEvento () {
 
         String s_titulo = event_title.getText().toString(), s_descripcion = event_description.getText().toString();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-        String stringDateInicio = event_start_date.getText().toString() + " " + event_start_time.getText().toString();
-        String stringDateFin = event_end_date.getText().toString() + " " + event_end_time.getText().toString();
+        String s_fechaInicio = event_start_date.getText().toString();
+        String s_horaInicio = event_start_time.getText().toString();
+        String stringDateInicio = s_fechaInicio + " " + s_horaInicio;
+        String s_fechaFin = event_end_date.getText().toString();
+        String s_horaFin = event_end_time.getText().toString();
+        String stringDateFin = s_fechaFin + " " + s_horaFin;
+        String s_location = event_location.getText().toString();
+        String s_color = event_color.getText().toString();
         Date dateInicio = null;
         Date dateFin = null;
         Map<String, Object> evento = new HashMap<>();
 
-        if (s_titulo.isEmpty() || stringDateInicio.isEmpty() || stringDateFin.isEmpty() || event_location.getText().toString().isEmpty() ||
+        if (s_titulo.isEmpty() || s_fechaInicio.isEmpty() || s_horaInicio.isEmpty()
+                || s_fechaFin.isEmpty() || s_horaFin.isEmpty() || s_location.isEmpty() ||
                 //latitud.getText().toString().isEmpty() || longitud.getText().toString().isEmpty() ||
-                s_descripcion.isEmpty()) {
+                s_descripcion.isEmpty() || s_color.isEmpty()) {
 
             Log.d(TAG, "Tienes que rellenar todos los campos");
 
@@ -200,10 +267,9 @@ public class EventActivity extends AppCompatActivity implements LocationFragment
             evento.put("Inicio", timeStampInicio);
             evento.put("Fin", timeStampFin);
             evento.put("DNI_Cliente", cliente.getDni_cliente());
-            //evento.put("Latitud", s_latitud);
-            //evento.put("Longitud", s_longitud);
             evento.put("Ubicacion", geoPoint);
             evento.put("Descripcion", s_descripcion);
+            evento.put("Color", s_color);
             return evento;
 
         }
@@ -299,5 +365,38 @@ public class EventActivity extends AppCompatActivity implements LocationFragment
     @Override
     public void Update(MarkerOptions markerOptions) {
         event_location.setText(markerOptions.getTitle());
+    }
+
+    public void openColorPickerDialogue() {
+
+        // the AmbilWarnaDialog callback needs 3 parameters
+        // one is the context, second is default color,
+        final AmbilWarnaDialog colorPickerDialogue = new AmbilWarnaDialog(this, mDefaultColor,
+                new AmbilWarnaDialog.OnAmbilWarnaListener() {
+                    @Override
+                    public void onCancel(AmbilWarnaDialog dialog) {
+                        // leave this function body as
+                        // blank, as the dialog
+                        // automatically closes when
+                        // clicked on cancel button
+                    }
+
+                    @Override
+                    public void onOk(AmbilWarnaDialog dialog, int color) {
+                        // change the mDefaultColor to
+                        // change the GFG text color as
+                        // it is returned when the OK
+                        // button is clicked from the
+                        // color picker dialog
+                        mDefaultColor = color;
+                        Log.d(TAG, color + " - " + mDefaultColor);
+
+                        // now change the picked color
+                        // preview box to mDefaultColor
+                        //mColorPreview.setBackgroundColor(mDefaultColor);
+                        event_color.setText(String.valueOf(mDefaultColor));
+                    }
+                });
+        colorPickerDialogue.show();
     }
 }

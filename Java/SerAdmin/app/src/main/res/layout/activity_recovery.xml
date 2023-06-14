@@ -34,6 +34,22 @@
 
 
         <EditText
+            android:id="@+id/dniRecovery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:gravity="center"
+            android:hint="DNI"
+            android:inputType="phone"
+            android:maxLength="180"
+            android:maxLines="1"
+            android:minEms="20"
+            android:textColor="@color/white"
+            android:textColorHint="@color/hint_white"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/day_text_size" />
+
+        <EditText
             android:id="@+id/Phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,6 +75,17 @@
             android:textStyle="bold"
             app:strokeColor="@color/white"
             app:strokeWidth="2.5dp" />
+
+        <TextView
+            android:id="@+id/alertRecovery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-15dp"
+            android:gravity="center"
+            android:text="No hay una cuenta con ese DNI y Teléfono asociados"
+            android:textColor="@color/carrot_orange"
+            android:textStyle="bold"
+            android:visibility="invisible" />
 
         <EditText
             android:id="@+id/escribirSMS"

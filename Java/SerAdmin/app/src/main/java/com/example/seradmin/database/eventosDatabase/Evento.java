@@ -22,6 +22,7 @@ public class Evento implements Serializable {
     public String descripcion;
     public Timestamp inicio;
     public Timestamp fin;
+    public int color;
 
     public Evento(){
     }
@@ -52,6 +53,21 @@ public class Evento implements Serializable {
         this.longitud = longitud;
         this.descripcion = descripcion;
 
+    }
+
+    public Evento(String id, String dni_cliente, String titulo, String fechaInicio, String fechaFin, String horaInicio,
+                  String horaFin, float latitud, float longitud, String descripcion, int color){
+        this.id = id;
+        this.dni_cliente = dni_cliente;
+        this.titulo = titulo;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFin;
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.descripcion = descripcion;
+        this.color = color;
     }
 
     public Evento(String titulo, String fechaInicio, String fechaFin){
@@ -140,4 +156,11 @@ public class Evento implements Serializable {
         this.descripcion = descripcion;
     }
 
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
 }

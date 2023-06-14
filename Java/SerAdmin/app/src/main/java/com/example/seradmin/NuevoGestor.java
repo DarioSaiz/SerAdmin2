@@ -2,8 +2,10 @@ package com.example.seradmin;
 
 import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +16,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.seradmin.calendario.EventActivity;
+import com.google.firebase.firestore.AggregateQuery;
+import com.google.firebase.firestore.AggregateQuerySnapshot;
+import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -74,6 +81,49 @@ public class NuevoGestor extends AppCompatActivity {
 
                 // SELECT X DNI
                 Query gestorVerify = gestores.whereEqualTo("DNI", s_dni);
+                AggregateQuery countDniGestor = gestores.whereEqualTo("DNI", s_dni).count();
+                AggregateQuery countTelefono = gestores.whereEqualTo("Num_Telf", s_num).count();
+
+                countDniGestor.get(AggregateSource.SERVER).addOnCompleteListener(taskCountGestor -> {
+                    if (taskCountGestor.isSuccessful()) {
+                        // Count fetched successfully
+                        AggregateQuerySnapshot snapshot = taskCountGestor.getResult();
+                        Log.d(TAG, "Count: " + snapshot.getCount());
+                        //setCountGestor(snapshot.getCount());
+                        if (snapshot.getCount() != 0) {
+                            new AlertDialog.Builder(NuevoGestor.this)
+                                    .setTitle("Error")
+                                    .setMessage("Ya existe un gestor con ese DNI")
+                                    .setIcon(android.R.drawable.ic_dialog_dialer)
+                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                                        }}
+                                    ).show();
+                        }
+                    }
+                });
+
+                countTelefono.get(AggregateSource.SERVER).addOnCompleteListener(taskCountGestor -> {
+                    if (taskCountGestor.isSuccessful()) {
+                        // Count fetched successfully
+                        AggregateQuerySnapshot snapshot = taskCountGestor.getResult();
+                        Log.d(TAG, "Count: " + snapshot.getCount());
+                        //setCountGestor(snapshot.getCount());
+                        if (snapshot.getCount() != 0) {
+                            new AlertDialog.Builder(NuevoGestor.this)
+                                    .setTitle("Error")
+                                    .setMessage("Ya existe un gestor con ese teléfono")
+                                    .setIcon(android.R.drawable.ic_dialog_dialer)
+                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                                        }}
+                                    ).show();
+                        }
+                    }
+                });
+
                 gestorVerify.get().addOnCompleteListener(task -> {
                     String lv_dni = "";
 

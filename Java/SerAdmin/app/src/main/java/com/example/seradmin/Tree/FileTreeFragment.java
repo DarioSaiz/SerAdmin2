@@ -1,5 +1,6 @@
 package com.example.seradmin.Tree;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -31,8 +32,7 @@ import java.util.List;
 public class FileTreeFragment extends Fragment {
     private TreeViewAdapter treeViewAdapter;
     private static final String TAG = "FileTreeFragment";
-    private String idCliente;
-    private String idSociedad;
+
     Cliente cliente = new Cliente();
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -149,6 +149,7 @@ public class FileTreeFragment extends Fragment {
             if (treeNode.getValue() instanceof String) {
                 String fileName = (String) treeNode.getValue();
                 deleteFile(fileName);
+                updateFileTree();
             }
             return false;
         });
@@ -181,6 +182,7 @@ public class FileTreeFragment extends Fragment {
         storageRef.getFile(localFile)
                 .addOnSuccessListener(taskSnapshot -> {
                     Toast.makeText(requireContext(), "Archivo descargado: " + fileName, Toast.LENGTH_SHORT).show();
+                    //updateFileTree();
                 })
                 .addOnFailureListener(exception -> {
                     // Ha ocurrido un error al descargar el archivo
@@ -188,22 +190,57 @@ public class FileTreeFragment extends Fragment {
                 });
     }
     private void deleteFile(String fileName) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Confirmación");
+        builder.setMessage("¿Estás seguro de que deseas eliminar el archivo: " + fileName + "?");
+        builder.setPositiveButton("Sí", (dialog, which) -> {
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference fileRef = storage.getReference().child(idCliente).child("pdfs").child(fileName);
-
+        StorageReference fileRef = storage.getReference().child(cliente.getDni_cliente()).child("pdfs").child(fileName);
         fileRef.delete()
                 .addOnSuccessListener(aVoid -> {
                     // El archivo se ha eliminado correctamente
                     Toast.makeText(requireContext(), "Archivo eliminado: " + fileName, Toast.LENGTH_SHORT).show();
                     // Actualiza la vista eliminando el nodo correspondiente
-                   // treeViewAdapter.removeNodeByValue(fileName);
+                    treeViewAdapter.removeNodeByValue(fileName);
+                    //updateFileTree();
                 })
                 .addOnFailureListener(exception -> {
                     // Ha ocurrido un error al eliminar el archivo
                     // Maneja el error aquí
                 });
+        });
+        builder.setNegativeButton("No", (dialog, which) -> {
+            // El usuario ha cancelado la eliminación, no se realiza ninguna acción
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
+
+
+
+
+    private void updateFileTree() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference().child(cliente.getDni_cliente()).child("pdfs");
+
+        storageRef.listAll().addOnSuccessListener(listResult -> {
+            List<TreeNode> fileRoots = new ArrayList<>();
+
+            // Por cada archivo PDF recuperado, crea un nodo en el árbol
+            for (StorageReference item : listResult.getItems()) {
+                String fileName = item.getName();
+                fileRoots.add(new TreeNode(fileName, R.layout.list_item_file));
+            }
+
+            treeViewAdapter.updateTreeNodes(fileRoots);
+            treeViewAdapter.notifyDataSetChanged();
+        }).addOnFailureListener(e -> {
+            // Maneja el error de recuperación de archivos desde Firebase Storage
+            Log.e(TAG, "Error retrieving PDF files from Firebase Storage", e);
+        });
+    }
 
 
 

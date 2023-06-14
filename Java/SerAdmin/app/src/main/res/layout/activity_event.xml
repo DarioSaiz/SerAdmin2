@@ -183,14 +183,14 @@
                     android:layout_below="@+id/event_start_date"
                     android:layout_alignStart="@+id/event_all_day_holder"
                     android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="false"
                     android:paddingTop="@dimen/activity_margin"
                     android:paddingEnd="@dimen/activity_margin"
                     android:paddingBottom="@dimen/activity_margin"
-                    android:focusable="false"
-                    android:clickable="true"
-                    android:textSize="@dimen/day_text_size"
                     android:text="January 1 1970"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/day_text_size" />
 
                 <TextView
                     android:id="@+id/event_end_time"
@@ -374,37 +374,37 @@
                     android:importantForAccessibility="no" />
 
                 <ImageView
-                    android:id="@+id/event_repetition_image"
+                    android:id="@+id/event_color_image"
                     android:layout_width="@dimen/smaller_icon_size"
                     android:layout_height="@dimen/smaller_icon_size"
                     android:layout_below="@+id/event_reminder_divider"
-                    android:layout_alignTop="@+id/event_repetition"
-                    android:layout_alignBottom="@+id/event_repetition"
+                    android:layout_alignTop="@+id/event_color"
+                    android:layout_alignBottom="@+id/event_color"
                     android:layout_marginStart="@dimen/normal_margin"
                     android:padding="@dimen/medium_margin"
-                    android:src="@drawable/zic_repeat_vector" />
+                    android:src="@drawable/zic_color_vector" />
 
                 <TextView
-                    android:id="@+id/event_repetition"
+                    android:id="@+id/event_color"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/event_reminder_divider"
                     android:layout_marginStart="@dimen/small_margin"
-                    android:layout_toEndOf="@+id/event_repetition_image"
+                    android:layout_toEndOf="@+id/event_color_image"
                     android:background="?attr/selectableItemBackground"
                     android:paddingTop="@dimen/normal_margin"
                     android:paddingEnd="@dimen/activity_margin"
                     android:paddingBottom="@dimen/normal_margin"
                     android:textSize="@dimen/day_text_size"
-                    tools:text="@string/no_repetition"
+                    tools:text="@string/color"
                     android:textColor="@color/white"/>
 
                 <RelativeLayout
                     android:id="@+id/event_repetition_rule_holder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/event_repetition"
-                    android:layout_alignStart="@+id/event_repetition"
+                    android:layout_below="@+id/event_color"
+                    android:layout_alignStart="@+id/event_color"
                     android:background="?attr/selectableItemBackground"
                     android:visibility="gone">
 
@@ -437,7 +437,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/event_repetition_rule_holder"
-                    android:layout_alignStart="@+id/event_repetition"
+                    android:layout_alignStart="@+id/event_color"
                     android:background="?attr/selectableItemBackground"
                     android:visibility="gone">
 
@@ -607,16 +607,34 @@
                     android:importantForAccessibility="no"
                     android:visibility="gone" />
 
-                <ImageView
-                    android:id="@+id/event_type_image"
-                    android:layout_width="@dimen/smaller_icon_size"
-                    android:layout_height="@dimen/smaller_icon_size"
-                    android:layout_below="@+id/event_caldav_calendar_divider"
-                    android:layout_marginStart="@dimen/normal_margin"
-                    android:padding="@dimen/medium_margin"
-                    android:src="@drawable/zic_color_vector" />
+                <!--                <ImageView-->
+<!--                    android:id="@+id/event_color_picker"-->
+<!--                    android:layout_width="@dimen/smaller_icon_size"-->
+<!--                    android:layout_height="@dimen/smaller_icon_size"-->
+<!--                    android:layout_below="@+id/event_caldav_calendar_divider"-->
+<!--                    android:layout_marginStart="@dimen/normal_margin"-->
+<!--                    android:padding="@dimen/medium_margin"-->
+<!--                    android:src="@drawable/zic_color_vector" />-->
 
-<!--                <RelativeLayout-->
+<!--                <EditText-->
+<!--                    android:id="@+id/event_color"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="@dimen/activity_margin"-->
+<!--                    android:layout_marginTop="@dimen/activity_margin"-->
+<!--                    android:layout_marginEnd="@dimen/activity_margin"-->
+<!--                    android:backgroundTint="@color/white"-->
+<!--                    android:hint="@string/color"-->
+<!--                    android:inputType="textCapSentences"-->
+<!--                    android:maxLength="180"-->
+<!--                    android:maxLines="1"-->
+<!--                    android:minEms="20"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textColorHint="@color/hint_white"-->
+<!--                    android:textCursorDrawable="@null"-->
+<!--                    android:textSize="@dimen/day_text_size" />-->
+
+                <!--                <RelativeLayout-->
 <!--                    android:id="@+id/event_type_holder"-->
 <!--                    android:layout_width="match_parent"-->
 <!--                    android:layout_height="wrap_content"-->
@@ -638,16 +656,16 @@
 <!--                        android:textSize="@dimen/day_text_size"-->
 <!--                        android:textColor="@color/white"/>-->
 
-                <ImageView
-                        android:id="@+id/event_color"
-                        android:layout_width="@dimen/color_sample_size"
-                        android:layout_height="@dimen/color_sample_size"
-                        android:layout_below="@+id/event_caldav_calendar_divider"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginStart="@dimen/normal_margin"
-                        android:padding="@dimen/medium_margin"
-                        android:layout_marginEnd="@dimen/big_margin"
-                        android:clickable="true" />
+<!--                <ImageView-->
+<!--                        android:id="@+id/event_type_image"-->
+<!--                        android:layout_width="@dimen/color_sample_size"-->
+<!--                        android:layout_height="@dimen/color_sample_size"-->
+<!--                        android:layout_below="@+id/event_caldav_calendar_divider"-->
+<!--                        android:layout_alignParentEnd="true"-->
+<!--                        android:layout_marginStart="@dimen/normal_margin"-->
+<!--                        android:padding="@dimen/medium_margin"-->
+<!--                        android:layout_marginEnd="@dimen/big_margin"-->
+<!--                        android:clickable="true" />-->
 
                 <!--                </RelativeLayout>-->
 

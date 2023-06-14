@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.seradmin.ManejadorClickCalendario;
 import com.example.seradmin.R;
 import com.example.seradmin.Recycler.Cliente;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -93,6 +94,7 @@ public class MonthFragment extends Fragment {
         res = view.getResources();
         for (int i = 0; i < DAYS_CNT; i++) {
             linearLayout = view.findViewById(res.getIdentifier("day_" + i, "id", packageName));
+            //linearLayout.setOnClickListener();
         }
         updateCalendar(targetDate, view);
 
@@ -184,9 +186,11 @@ public class MonthFragment extends Fragment {
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                     DateTime fin = new DateTime(document.getDate("Fin"));
                     String title = document.getString("Titulo");
+                    String color = document.getString("Color");
+                    String id = document.getId();
 
                     if (fin.isAfter(inicioDia)) {
-                        events.add(new Event(inicioDia, fin, title));
+                        events.add(new Event(inicioDia, fin, title, color, id));
                     }
                 }
 
@@ -209,9 +213,11 @@ public class MonthFragment extends Fragment {
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                     DateTime inicio = new DateTime(document.getDate("Inicio"));
                     String title = document.getString("Titulo");
+                    String color = document.getString("Color");
+                    String id = document.getId();
 
                     if (inicio.isBefore(finDia)) {
-                        events.add(new Event(inicio, finDia, title));
+                        events.add(new Event(inicio, finDia, title, color, id));
                     }
                 }
 
@@ -275,6 +281,8 @@ public class MonthFragment extends Fragment {
                 RelativeLayout rl = ev.findViewById(R.id.day_monthly_event_holder);
                 TextView titulo = ev.findViewById(R.id.day_monthly_event_id);
                 titulo.setText(event.getTitulo());
+                rl.setBackgroundColor(Integer.valueOf(event.getColor()));
+                rl.setOnClickListener(new ManejadorClickCalendario(rl, event, getContext()));
                 linearLayout.addView(rl);
             }
         }
